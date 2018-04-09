@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/imageViewRecipe"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/textViewRecipeNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/imageViewRecipe"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        android:fontFamily="casual"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="6dp"
+        android:text=" Recipe: "/>
+
+    <TextView
+        android:id="@+id/textViewRecipeName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="casual"
+        android:textSize="16sp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewRecipeNameLabel"
+        app:layout_constraintStart_toEndOf="@+id/textViewRecipeNameLabel"
+        tools:text="Nutella Pie"/>
+
+    <TextView
+        android:id="@+id/textViewServingLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textViewRecipeName"
+        app:layout_constraintLeft_toRightOf="@id/imageViewRecipe"
+        android:fontFamily="casual"
+        android:textSize="18sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="6dp"
+        android:text="Servings: "/>
+
+    <TextView
+        android:id="@+id/textViewServing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textViewRecipeName"
+        app:layout_constraintLeft_toLeftOf="@id/textViewRecipeName"
+        android:fontFamily="casual"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="6dp"
+        tools:text="8 "/>
+
+</android.support.constraint.ConstraintLayout>
