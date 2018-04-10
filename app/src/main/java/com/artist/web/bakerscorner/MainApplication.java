@@ -14,5 +14,6 @@ public class MainApplication extends Application {
     public void onCreate(){
         super.onCreate();
         sHttpClient = HttpClient.getInstance();
+
     }
 }

@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Ingredients {
 
     @SerializedName("quantity")
-    private int mQuantity;
+    private double mQuantity;
 
     @SerializedName("measure")
     private String mMeasure;
@@ -17,11 +17,11 @@ public class Ingredients {
     @SerializedName("ingredient")
     private String mIngredient;
 
-    public int getQuantity() {
+    public double getQuantity() {
         return mQuantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         mQuantity = quantity;
     }
 

@@ -20,6 +20,7 @@ public class HttpClient {
          request = new Request.Builder()
                                 .url(Utils.RECIPE_URL)
                                 .build();
+
     }
 
     public static HttpClient getInstance(){

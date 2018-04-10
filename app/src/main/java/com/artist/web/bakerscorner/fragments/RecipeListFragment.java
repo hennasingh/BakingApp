@@ -16,8 +16,11 @@ import com.artist.web.bakerscorner.adapters.RecipeAdapter;
 import com.artist.web.bakerscorner.data.Recipes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,10 +32,9 @@ import okhttp3.Response;
 
 public class RecipeListFragment extends Fragment {
 
+    private static final String TAG = RecipeListFragment.class.getSimpleName();
     private RecyclerView mRecipesRecyclerView;
     private RecipeAdapter mRecipeAdapter;
-
-    private static final String TAG = RecipeListFragment.class.getSimpleName();
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +68,27 @@ public class RecipeListFragment extends Fragment {
 
                     String recipeResponse = response.body().string();
                     Gson gson = new GsonBuilder().create();
-                    Recipes recipes = gson.fromJson(recipeResponse, Recipes.class);
+                    Log.e(TAG, "data received: " + recipeResponse);
+                    ArrayList<Recipes> recipes = gson.fromJson(recipeResponse, new TypeToken<List<Recipes>>() {
+                    }.getType());
 
+                    Log.e(TAG, "No of recipes " + recipes.size());
+                    mRecipeAdapter = new RecipeAdapter(recipes);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                mRecipesRecyclerView.setAdapter(mRecipeAdapter);
+                                mRecipesRecyclerView.setHasFixedSize(true);
+                            } catch (Exception e) {
+                                Log.e(TAG, "UI Update Failed " + e.getMessage());
+                            }
+                        }
+                    });
+
+                } else {
+                    Log.e(TAG, "Failed to get a successful response , status code = " + statusCode);
                 }
 
             }
