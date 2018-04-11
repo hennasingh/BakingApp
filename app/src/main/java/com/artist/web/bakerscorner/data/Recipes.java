@@ -1,36 +1,42 @@
 package com.artist.web.bakerscorner.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by User on 07-Apr-18.
  */
 
-public class Recipes {
+public class Recipes implements Parcelable {
 
+    public static final Parcelable.Creator<Recipes> CREATOR = new Parcelable.Creator<Recipes>() {
+        @Override
+        public Recipes createFromParcel(Parcel source) {
+            return new Recipes(source);
+        }
+
+        @Override
+        public Recipes[] newArray(int size) {
+            return new Recipes[size];
+        }
+    };
     @SerializedName("id")
     private int mRecipeId;
-
     @SerializedName("name")
     private String mRecipeName;
-
     @SerializedName("ingredients")
     private List<Ingredients> mIngredientsList;
-
     @SerializedName("steps")
     private List<Steps> mStepsList;
-
     @SerializedName("servings")
     private int mServings;
-
     @SerializedName("image")
     private String mImage;
-
-    public int getRecipeId() {
-        return mRecipeId;
-    }
 
     public Recipes(int recipeId, String recipeName, List<Ingredients> ingredientsList,
                    List<Steps> stepsList, int servings, String image) {
@@ -40,6 +46,21 @@ public class Recipes {
         mStepsList = stepsList;
         mServings = servings;
         mImage = image;
+    }
+
+    Recipes(Parcel in) {
+        this.mRecipeId = in.readInt();
+        this.mRecipeName = in.readString();
+        this.mIngredientsList = new ArrayList<Ingredients>();
+        in.readList(this.mIngredientsList, Ingredients.class.getClassLoader());
+        this.mStepsList = new ArrayList<Steps>();
+        in.readList(this.mStepsList, Steps.class.getClassLoader());
+        this.mServings = in.readInt();
+        this.mImage = in.readString();
+    }
+
+    public int getRecipeId() {
+        return mRecipeId;
     }
 
     public void setRecipeId(int recipeId) {
@@ -84,5 +105,20 @@ public class Recipes {
 
     public void setImage(String image) {
         mImage = image;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.mRecipeId);
+        dest.writeString(this.mRecipeName);
+        dest.writeList(this.mIngredientsList);
+        dest.writeList(this.mStepsList);
+        dest.writeInt(this.mServings);
+        dest.writeString(this.mImage);
     }
 }

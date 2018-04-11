@@ -1,5 +1,6 @@
 package com.artist.web.bakerscorner.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
+import com.artist.web.bakerscorner.RecipeActivity;
 import com.artist.web.bakerscorner.adapters.RecipeAdapter;
 import com.artist.web.bakerscorner.data.Recipes;
 import com.google.gson.Gson;
@@ -30,12 +32,15 @@ import okhttp3.Response;
  * Created by User on 07-Apr-18.
  */
 
-public class RecipeListFragment extends Fragment {
+public class RecipeListFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickListener {
 
     private static final String TAG = RecipeListFragment.class.getSimpleName();
     private RecyclerView mRecipesRecyclerView;
     private RecipeAdapter mRecipeAdapter;
-    
+    private ArrayList<Recipes> mRecipeList;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,6 @@ public class RecipeListFragment extends Fragment {
 
         mRecipesRecyclerView = view.findViewById(R.id.rv_recipes);
         mRecipesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        
         updateUI();
         return view;
     }
@@ -69,11 +73,17 @@ public class RecipeListFragment extends Fragment {
                     String recipeResponse = response.body().string();
                     Gson gson = new GsonBuilder().create();
                     Log.e(TAG, "data received: " + recipeResponse);
-                    ArrayList<Recipes> recipes = gson.fromJson(recipeResponse, new TypeToken<List<Recipes>>() {
+
+                    /**
+                     * TypeToken - Gson uses Java reflection API to get the type of the object to which a Json text is to be mapped. But with generics,
+                     * this information is lost during serialization. To counter this problem,
+                     * Gson provides a class com.google.gson.reflect.TypeToken to store the type of the generic object
+                     */
+                    mRecipeList = gson.fromJson(recipeResponse, new TypeToken<List<Recipes>>() {
                     }.getType());
 
-                    Log.e(TAG, "No of recipes " + recipes.size());
-                    mRecipeAdapter = new RecipeAdapter(recipes);
+                    Log.e(TAG, "No of recipes " + mRecipeList.size());
+                    mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -94,5 +104,13 @@ public class RecipeListFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onItemClick(int clickedPosition) {
+        Intent intent = new Intent(getActivity(), RecipeActivity.class);
+        Recipes recipe = mRecipeList.get(clickedPosition);
+        intent.putExtra(RecipeActivity.PARCEL_DATA, recipe);
+        startActivity(intent);
     }
 }
