@@ -32,14 +32,14 @@ public class Recipes implements Parcelable {
     @SerializedName("ingredients")
     private List<Ingredients> mIngredientsList;
     @SerializedName("steps")
-    private List<Steps> mStepsList;
+    private ArrayList<Steps> mStepsList;
     @SerializedName("servings")
     private int mServings;
     @SerializedName("image")
     private String mImage;
 
     public Recipes(int recipeId, String recipeName, List<Ingredients> ingredientsList,
-                   List<Steps> stepsList, int servings, String image) {
+                   ArrayList<Steps> stepsList, int servings, String image) {
         mRecipeId = recipeId;
         mRecipeName = recipeName;
         mIngredientsList = ingredientsList;
@@ -83,11 +83,11 @@ public class Recipes implements Parcelable {
         mIngredientsList = ingredientsList;
     }
 
-    public List<Steps> getStepsList() {
+    public ArrayList<Steps> getStepsList() {
         return mStepsList;
     }
 
-    public void setStepsList(List<Steps> stepsList) {
+    public void setStepsList(ArrayList<Steps> stepsList) {
         mStepsList = stepsList;
     }
 

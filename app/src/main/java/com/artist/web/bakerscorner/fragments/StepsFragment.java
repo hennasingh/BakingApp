@@ -29,7 +29,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     Recipes mdisplayedRecipe;
     StepsAdapter mStepsAdapter;
     RecyclerView mStepsRecyclerView;
-    List<Steps> stepList;
+    ArrayList<Steps> stepList;
 
     public static StepsFragment newInstance(Recipes recipe) {
         Bundle args = new Bundle();

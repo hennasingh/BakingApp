@@ -19,7 +19,7 @@ public class StepPagerActivity extends AppCompatActivity {
     private static final String PARCEL_DATA = "step_data";
     private static final String PARCEL_LIST = "step_list";
 
-    public static Intent newIntent(Context packageContext, Steps steps, List<Steps> stepList) {
+    public static Intent newIntent(Context packageContext, Steps steps, ArrayList<Steps> stepList) {
         Intent intent = new Intent(packageContext, StepPagerActivity.class);
         intent.putExtra(PARCEL_DATA, steps);
         intent.putExtra(PARCEL_LIST, stepList);
