@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BakersCorner</string>
+    <string name="no_instructions">No Instructions Found. Please follow the video</string>
 </resources>

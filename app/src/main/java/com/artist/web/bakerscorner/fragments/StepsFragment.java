@@ -17,7 +17,6 @@ import com.artist.web.bakerscorner.data.Recipes;
 import com.artist.web.bakerscorner.data.Steps;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by User on 13-Apr-18.
@@ -73,8 +72,8 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
 
     @Override
     public void onItemClick(int clickedPosition) {
-        Steps steps = stepList.get(clickedPosition);
-        Intent intent = StepPagerActivity.newIntent(getActivity(), steps, stepList);
+
+        Intent intent = StepPagerActivity.newIntent(getActivity(), stepList);
         startActivity(intent);
     }
 }

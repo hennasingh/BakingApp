@@ -3,10 +3,12 @@ package com.artist.web.bakerscorner.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.fragments.StepVideoFragment;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by User on 14-Apr-18.
@@ -14,22 +16,21 @@ import java.util.List;
 
 public class StepVideoPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Steps> stepList;
-    private Steps step;
+    private ArrayList<Steps> stepList;
 
-    public StepVideoPagerAdapter(FragmentManager fm, Steps step, List<Steps> stepList) {
+    public StepVideoPagerAdapter(FragmentManager fm, ArrayList<Steps> stepList) {
         super(fm);
-        this.step = step;
         this.stepList = stepList;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        return StepVideoFragment.newInstance(position, stepList);
     }
 
     @Override
     public int getCount() {
+        Log.d("StepVideoPagerAdapter", "Size is " + stepList.size());
         return stepList.size();
     }
 }
