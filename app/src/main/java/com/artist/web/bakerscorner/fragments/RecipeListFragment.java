@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.RecipeActivity;
+import com.artist.web.bakerscorner.activities.RecipePagerActivity;
 import com.artist.web.bakerscorner.adapters.RecipeAdapter;
 import com.artist.web.bakerscorner.data.Recipes;
 import com.google.gson.Gson;
@@ -83,14 +83,19 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                     }.getType());
 
                     Log.e(TAG, "No of recipes " + mRecipeList.size());
-                    mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this);
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
 
-                                mRecipesRecyclerView.setAdapter(mRecipeAdapter);
-                                mRecipesRecyclerView.setHasFixedSize(true);
+                                if (mRecipeAdapter == null) {
+                                    mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this);
+                                    mRecipesRecyclerView.setAdapter(mRecipeAdapter);
+                                    mRecipesRecyclerView.setHasFixedSize(true);
+                                } else {
+                                    mRecipeAdapter.notifyDataSetChanged();
+                                }
                             } catch (Exception e) {
                                 Log.e(TAG, "UI Update Failed " + e.getMessage());
                             }
@@ -108,9 +113,8 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
     @Override
     public void onItemClick(int clickedPosition) {
-        Intent intent = new Intent(getActivity(), RecipeActivity.class);
         Recipes recipe = mRecipeList.get(clickedPosition);
-        intent.putExtra(RecipeActivity.PARCEL_DATA, recipe);
+        Intent intent = RecipePagerActivity.newIntent(getActivity(), recipe);
         startActivity(intent);
     }
 }

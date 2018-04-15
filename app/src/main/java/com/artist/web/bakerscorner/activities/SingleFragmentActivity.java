@@ -1,9 +1,11 @@
-package com.artist.web.bakerscorner;
+package com.artist.web.bakerscorner.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.artist.web.bakerscorner.R;
 
 /**
  * Created by User on 08-Apr-18.
