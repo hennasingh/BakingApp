@@ -17,13 +17,13 @@ public class StepPagerActivity extends AppCompatActivity {
 
     private static final String PARCEL_LIST = "step_list";
     private static final String ARG_CLICKED_POSITION = "clicked_step";
+    private static final int DEFAULT_POSITION = 0;
+    private Steps clickedStep;
 
-    private static final int DEFAULT_POSITION = 1;
-
-    public static Intent newIntent(Context packageContext, ArrayList<Steps> stepList, int position) {
+    public static Intent newIntent(Context packageContext, ArrayList<Steps> stepList, Steps step) {
         Intent intent = new Intent(packageContext, StepPagerActivity.class);
         intent.putExtra(PARCEL_LIST, stepList);
-        intent.putExtra(ARG_CLICKED_POSITION, position);
+        intent.putExtra(ARG_CLICKED_POSITION, step);
         return intent;
     }
 
@@ -33,17 +33,17 @@ public class StepPagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_pager);
 
         ArrayList<Steps> stepList = getIntent().getParcelableArrayListExtra(PARCEL_LIST);
-        int position = getIntent().getIntExtra(ARG_CLICKED_POSITION, DEFAULT_POSITION);
+        Steps clickedStep = getIntent().getParcelableExtra(ARG_CLICKED_POSITION);
 
         //Set the pager with an adapter
         ViewPager pager = findViewById(R.id.viewpager);
-        pager.setAdapter(new StepVideoPagerAdapter(getSupportFragmentManager(), stepList, position));
+        pager.setAdapter(new StepVideoPagerAdapter(getSupportFragmentManager(), stepList, clickedStep.getStepId()));
 
         //Bind the step indicator to the adapter
         StepIndicator stepIndicator = findViewById(R.id.step_indicator);
         stepIndicator.setupWithViewPager(pager);
         stepIndicator.setStepsCount(stepList.size());
-        stepIndicator.setCurrentStepPosition(position);
+        stepIndicator.setCurrentStepPosition(clickedStep.getStepId());
 
     }
 }

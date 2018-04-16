@@ -1,9 +1,11 @@
 package com.artist.web.bakerscorner.fragments;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +13,8 @@ import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.data.Steps;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.artist.web.bakerscorner.handler.ExoPlayerVideoHandler;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
 
@@ -32,12 +26,11 @@ public class StepVideoFragment extends Fragment {
 
     private static final String ARG_STEP = "step_selected";
     private static final String ARG_STEP_LIST = "step_list";
-
+    View displayView;
+    String videoUrl;
     private ArrayList<Steps> displayStep;
     private int position;
-    private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-
 
     public static StepVideoFragment newInstance(int position, ArrayList<Steps> stepList) {
         Bundle args = new Bundle();
@@ -59,7 +52,7 @@ public class StepVideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View displayView = inflater.inflate(R.layout.fragment_steps_video, container, false);
+        displayView = inflater.inflate(R.layout.fragment_steps_video, container, false);
 
         mPlayerView = displayView.findViewById(R.id.playerView);
         TextView mTextViewDescription = displayView.findViewById(R.id.step_instruction);
@@ -72,31 +65,49 @@ public class StepVideoFragment extends Fragment {
             mTextViewDescription.setText(R.string.no_instructions);
         }
 
-        String videoUrl = stepDisplay.getVideoUrl();
-        if (videoUrl == null) {
-            videoUrl = stepDisplay.getThumbnailUrl();
-        }
+        videoUrl = stepDisplay.getVideoUrl();
 
-        // Initialize the player.
-        initializePlayer(Uri.parse(videoUrl));
+        if (!TextUtils.isEmpty(videoUrl)) {
+            // Initialize the player.
+            initializePlayer(Uri.parse(videoUrl));
+        } else {
+            videoUrl = stepDisplay.getThumbnailUrl();
+            if (TextUtils.isEmpty(videoUrl)) {
+                mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cake));
+            } else {
+                // Initialize the player.
+                initializePlayer(Uri.parse(videoUrl));
+            }
+        }
 
         return displayView;
     }
 
     private void initializePlayer(Uri videoUri) {
 
-        if (mExoPlayer == null) {
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector(),
-                    new DefaultLoadControl());
-            mPlayerView.setPlayer(mExoPlayer);
-
-            // Prepare the MediaSource.
-            String userAgent = Util.getUserAgent(getActivity(), "Baking Videos");
-            MediaSource mediaSource = new ExtractorMediaSource(videoUri, new DefaultDataSourceFactory(
-                    getActivity(), userAgent), new DefaultExtractorsFactory(), null, null);
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+        if (videoUri != null && mPlayerView != null) {
+            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), videoUri, mPlayerView);
         }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        ExoPlayerVideoHandler.getInstance().goToBackground();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (videoUrl != null && mPlayerView != null) {
+            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), Uri.parse(videoUrl), mPlayerView);
+        }
+        ExoPlayerVideoHandler.getInstance().goToForeground();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
     }
 }

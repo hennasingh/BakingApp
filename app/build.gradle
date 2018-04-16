@@ -48,4 +48,7 @@ dependencies {
     //exo player library
     implementation 'com.google.android.exoplayer:exoplayer:2.7.0'
 
+    //picasso library
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
 }

@@ -50,7 +50,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
     }
 
     public interface StepsOnClickListener {
-        void onItemClick(int clickedPosition);
+        void onItemClick(Steps step);
     }
 
     class StepsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -60,7 +60,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
         View mVerticalSeparator;
         StepsOnClickListener mClickListener;
 
-        public StepsHolder(View itemView, StepsOnClickListener listener) {
+        StepsHolder(View itemView, StepsOnClickListener listener) {
             super(itemView);
             mStepNumber = itemView.findViewById(R.id.textViewStepNum);
             mStepDescription = itemView.findViewById(R.id.step_description);
@@ -73,7 +73,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            mClickListener.onItemClick(clickedPosition);
+            Steps step = mStepsList.get(clickedPosition);
+            mClickListener.onItemClick(step);
 
         }
     }
