@@ -37,8 +37,6 @@ public class StepVideoFragment extends Fragment {
     private int position;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    private TextView mTextViewDescription;
-    private Steps stepDisplay;
 
 
     public static StepVideoFragment newInstance(int position, ArrayList<Steps> stepList) {
@@ -54,7 +52,7 @@ public class StepVideoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         displayStep = getArguments().getParcelableArrayList(ARG_STEP_LIST);
-        position = getArguments().getInt(ARG_STEP_LIST);
+        position = getArguments().getInt(ARG_STEP);
     }
 
     @Nullable
@@ -64,9 +62,9 @@ public class StepVideoFragment extends Fragment {
         View displayView = inflater.inflate(R.layout.fragment_steps_video, container, false);
 
         mPlayerView = displayView.findViewById(R.id.playerView);
-        mTextViewDescription = displayView.findViewById(R.id.step_description);
+        TextView mTextViewDescription = displayView.findViewById(R.id.step_instruction);
 
-        stepDisplay = displayStep.get(position);
+        Steps stepDisplay = displayStep.get(position);
 
         if (stepDisplay.getDescription().length() != 0) {
             mTextViewDescription.setText(stepDisplay.getDescription());

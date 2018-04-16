@@ -73,7 +73,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     @Override
     public void onItemClick(int clickedPosition) {
 
-        Intent intent = StepPagerActivity.newIntent(getActivity(), stepList);
+        Intent intent = StepPagerActivity.newIntent(getActivity(), stepList, clickedPosition);
         startActivity(intent);
     }
 }

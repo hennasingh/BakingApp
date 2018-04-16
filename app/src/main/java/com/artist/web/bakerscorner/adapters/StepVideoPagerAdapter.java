@@ -17,15 +17,17 @@ import java.util.ArrayList;
 public class StepVideoPagerAdapter extends FragmentPagerAdapter {
 
     private ArrayList<Steps> stepList;
+    private int positionToDisplay;
 
-    public StepVideoPagerAdapter(FragmentManager fm, ArrayList<Steps> stepList) {
+    public StepVideoPagerAdapter(FragmentManager fm, ArrayList<Steps> stepList, int position) {
         super(fm);
         this.stepList = stepList;
+        this.positionToDisplay = position;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return StepVideoFragment.newInstance(position, stepList);
+        return StepVideoFragment.newInstance(positionToDisplay, stepList);
     }
 
     @Override

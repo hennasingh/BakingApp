@@ -15,7 +15,6 @@ import com.artist.web.bakerscorner.data.Recipes;
 public class RecipePagerActivity extends AppCompatActivity {
 
     private static final String PARCEL_DATA = "recipe_data";
-    private ViewPager mViewPager;
 
     public static Intent newIntent(Context packageContext, Recipes recipe) {
         Intent intent = new Intent(packageContext, RecipePagerActivity.class);
@@ -29,7 +28,7 @@ public class RecipePagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_pager);
 
         Recipes displayRecipe = getIntent().getParcelableExtra(PARCEL_DATA);
-        mViewPager = findViewById(R.id.viewpager);
+        ViewPager mViewPager = findViewById(R.id.viewpager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new RecipePagerAdapter(fragmentManager, displayRecipe));
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
