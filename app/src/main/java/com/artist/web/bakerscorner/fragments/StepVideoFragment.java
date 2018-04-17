@@ -28,6 +28,7 @@ public class StepVideoFragment extends Fragment {
     private static final String ARG_STEP_LIST = "step_list";
     View displayView;
     String videoUrl;
+    private boolean destroyVideo = true;
     private ArrayList<Steps> displayStep;
     private int position;
     private SimpleExoPlayerView mPlayerView;
@@ -66,27 +67,23 @@ public class StepVideoFragment extends Fragment {
         }
 
         videoUrl = stepDisplay.getVideoUrl();
-
-        if (!TextUtils.isEmpty(videoUrl)) {
-            // Initialize the player.
-            initializePlayer(Uri.parse(videoUrl));
-        } else {
+        if (TextUtils.isEmpty(videoUrl)) {
             videoUrl = stepDisplay.getThumbnailUrl();
-            if (TextUtils.isEmpty(videoUrl)) {
-                mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cake));
-            } else {
-                // Initialize the player.
-                initializePlayer(Uri.parse(videoUrl));
-            }
         }
+        // Initialize the player.
+        initializePlayer(Uri.parse(videoUrl));
 
         return displayView;
     }
 
     private void initializePlayer(Uri videoUri) {
 
+        if (videoUri == null)
+            mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(displayView.getContext().getResources(),
+                    R.drawable.cake));
         if (videoUri != null && mPlayerView != null) {
             ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), videoUri, mPlayerView);
+            destroyVideo = false;
         }
     }
 
@@ -108,6 +105,8 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        if (destroyVideo) {
+            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        }
     }
 }
