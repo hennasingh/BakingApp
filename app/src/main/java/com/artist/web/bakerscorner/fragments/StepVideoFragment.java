@@ -150,7 +150,6 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         if (Util.SDK_INT <= 23 && mVideoUrl != null) {
             createMediaPlayer();
         }
