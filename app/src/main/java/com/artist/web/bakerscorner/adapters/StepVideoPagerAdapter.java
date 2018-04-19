@@ -26,9 +26,6 @@ public class StepVideoPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (positionToDisplay > position) {
-            return StepVideoFragment.newInstance(positionToDisplay, stepList);
-        }
         return StepVideoFragment.newInstance(position, stepList);
     }
 

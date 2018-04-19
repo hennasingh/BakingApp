@@ -17,7 +17,7 @@
         app:siStepColor="@color/step_default"/>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+        android:id="@+id/stepsviewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

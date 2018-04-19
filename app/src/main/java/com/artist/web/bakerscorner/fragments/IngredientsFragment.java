@@ -3,6 +3,7 @@ package com.artist.web.bakerscorner.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,14 @@ import android.widget.TextView;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.data.Ingredients;
 import com.artist.web.bakerscorner.data.Recipes;
+import com.artist.web.bakerscorner.network.Utils;
 
 import java.util.List;
+
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by User on 11-Apr-18.
@@ -22,6 +29,11 @@ public class IngredientsFragment extends Fragment {
 
     private static final String ARG_RECIPE = "recipe_selected";
     Recipes mdisplayedRecipe;
+    @BindView(R.id.textViewIngredient)
+    TextView mTextViewIngredients;
+    @BindString(R.string.mIngredientsDescription)
+    String mTextIngredients;
+    private Unbinder unbinder;
 
     public static IngredientsFragment newInstance(Recipes recipe) {
         Bundle args = new Bundle();
@@ -43,20 +55,30 @@ public class IngredientsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View ingredientView = inflater.inflate(R.layout.fragment_ingredients, container, false);
 
-        TextView mTextViewIngredients = ingredientView.findViewById(R.id.textViewIngredient);
+        unbinder = ButterKnife.bind(this, ingredientView);
         List<Ingredients> ingredientsList = mdisplayedRecipe.getIngredientsList();
 
-        String detailIngredients = "";
-        if (ingredientsList != null) {
-            for (int i = 0; i < ingredientsList.size(); i++) {
-                String ingred = ingredientsList.get(i).getIngredient();
-                double quantity = ingredientsList.get(i).getQuantity();
-                String measure = ingredientsList.get(i).getMeasure();
-                detailIngredients = detailIngredients.concat(ingred + " ( " + quantity + " " + measure + " ) " + "\n");
-            }
+        StringBuilder detailIngredients = new StringBuilder();
+        for (Ingredients mIngredient : ingredientsList) {
+            detailIngredients.append(
+                    String.format(
+                            mTextIngredients,
+                            Utils.convertStringToFirstCapital(mIngredient.getIngredient()),
+                            Html.fromHtml(Double.toString(mIngredient.getQuantity())),
+                            mIngredient.getMeasure().toLowerCase()
+                    )
+            );
+
         }
+
         mTextViewIngredients.setText(detailIngredients);
 
         return ingredientView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

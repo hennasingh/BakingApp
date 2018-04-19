@@ -1,10 +1,11 @@
 package com.artist.web.bakerscorner.fragments;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -35,10 +39,11 @@ import okhttp3.Response;
 public class RecipeListFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickListener {
 
     private static final String TAG = RecipeListFragment.class.getSimpleName();
-    private RecyclerView mRecipesRecyclerView;
+    @BindView(R.id.rv_recipes)
+    RecyclerView mRecipesRecyclerView;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipes> mRecipeList;
-
+    private Unbinder unbinder;
 
 
     @Override
@@ -49,12 +54,26 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipes_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_recipes_list_steps, container, false);
 
-        mRecipesRecyclerView = view.findViewById(R.id.rv_recipes);
-        mRecipesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        unbinder = ButterKnife.bind(this, view);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), gridColumns());
+        mRecipesRecyclerView.setLayoutManager(layoutManager);
         updateUI();
         return view;
+    }
+
+    private int gridColumns() {
+        int size = 0;
+        switch (getActivity().getResources().getConfiguration().orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                size = 1;
+                break;
+            case Configuration.ORIENTATION_LANDSCAPE:
+                size = 2;
+                break;
+        }
+        return size;
     }
 
     private void updateUI() {
@@ -90,7 +109,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                             try {
 
                                 if (mRecipeAdapter == null) {
-                                    mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this);
+                                    mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this, getActivity());
                                     mRecipesRecyclerView.setAdapter(mRecipeAdapter);
                                     mRecipesRecyclerView.setHasFixedSize(true);
                                 } else {
@@ -116,5 +135,11 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         Recipes recipe = mRecipeList.get(clickedPosition);
         Intent intent = RecipePagerActivity.newIntent(getActivity(), recipe);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

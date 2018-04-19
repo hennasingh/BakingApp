@@ -3,6 +3,7 @@ package com.artist.web.bakerscorner.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,12 +14,19 @@ import com.layer_net.stepindicator.StepIndicator;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class StepPagerActivity extends AppCompatActivity {
 
     private static final String PARCEL_LIST = "step_list";
     private static final String ARG_CLICKED_POSITION = "clicked_step";
-    private static final int DEFAULT_POSITION = 0;
-    private Steps clickedStep;
+
+    @Nullable
+    @BindView(R.id.step_indicator)
+    StepIndicator stepIndicator;
+    @BindView(R.id.stepsviewpager)
+    ViewPager pager;
 
     public static Intent newIntent(Context packageContext, ArrayList<Steps> stepList, Steps step) {
         Intent intent = new Intent(packageContext, StepPagerActivity.class);
@@ -31,19 +39,20 @@ public class StepPagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_pager);
+        ButterKnife.bind(this);
 
         ArrayList<Steps> stepList = getIntent().getParcelableArrayListExtra(PARCEL_LIST);
         Steps clickedStep = getIntent().getParcelableExtra(ARG_CLICKED_POSITION);
+        int position = clickedStep.getStepId();
 
         //Set the pager with an adapter
-        ViewPager pager = findViewById(R.id.viewpager);
-        pager.setAdapter(new StepVideoPagerAdapter(getSupportFragmentManager(), stepList, clickedStep.getStepId()));
+        pager.setAdapter(new StepVideoPagerAdapter(getSupportFragmentManager(), stepList, position));
 
         //Bind the step indicator to the adapter
-        StepIndicator stepIndicator = findViewById(R.id.step_indicator);
         stepIndicator.setupWithViewPager(pager);
         stepIndicator.setStepsCount(stepList.size());
-        stepIndicator.setCurrentStepPosition(clickedStep.getStepId());
+        stepIndicator.setCurrentStepPosition(position);
+        pager.setCurrentItem(position);
 
     }
 }

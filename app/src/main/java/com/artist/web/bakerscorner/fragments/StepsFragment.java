@@ -18,6 +18,10 @@ import com.artist.web.bakerscorner.data.Steps;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by User on 13-Apr-18.
  */
@@ -27,8 +31,10 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     private static final String ARG_RECIPE = "recipe_selected";
     Recipes mdisplayedRecipe;
     StepsAdapter mStepsAdapter;
+    @BindView(R.id.rv_recipes)
     RecyclerView mStepsRecyclerView;
     ArrayList<Steps> stepList;
+    private Unbinder unbinder;
 
     public static StepsFragment newInstance(Recipes recipe) {
         Bundle args = new Bundle();
@@ -48,9 +54,9 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View stepsView = inflater.inflate(R.layout.fragment_recipes_list, container, false);
+        View stepsView = inflater.inflate(R.layout.fragment_recipes_list_steps, container, false);
 
-        mStepsRecyclerView = stepsView.findViewById(R.id.rv_recipes);
+        unbinder = ButterKnife.bind(this, stepsView);
         mStepsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
@@ -74,5 +80,13 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     public void onItemClick(Steps step) {
         Intent intent = StepPagerActivity.newIntent(getActivity(), stepList, step);
         startActivity(intent);
+    }
+
+    // When binding a fragment in onCreateView, set the views to null in onDestroyView.
+    // ButterKnife returns an Unbinder on the initial binding that has an unbind method to do this automatically.
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

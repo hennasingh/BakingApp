@@ -12,9 +12,16 @@ import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.adapters.RecipePagerAdapter;
 import com.artist.web.bakerscorner.data.Recipes;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipePagerActivity extends AppCompatActivity {
 
     private static final String PARCEL_DATA = "recipe_data";
+    @BindView(R.id.viewpager)
+    ViewPager mViewPager;
+    @BindView(R.id.sliding_tabs)
+    TabLayout tabLayout;
 
     public static Intent newIntent(Context packageContext, Recipes recipe) {
         Intent intent = new Intent(packageContext, RecipePagerActivity.class);
@@ -25,13 +32,12 @@ public class RecipePagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_pager);
-
+        setContentView(R.layout.activity_detail_pager);
+        ButterKnife.bind(this);
         Recipes displayRecipe = getIntent().getParcelableExtra(PARCEL_DATA);
-        ViewPager mViewPager = findViewById(R.id.viewpager);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new RecipePagerAdapter(fragmentManager, displayRecipe));
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
     }

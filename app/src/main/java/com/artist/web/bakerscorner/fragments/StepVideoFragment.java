@@ -1,6 +1,5 @@
 package com.artist.web.bakerscorner.fragments;
 
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,14 +8,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.data.Steps;
 import com.artist.web.bakerscorner.handler.ExoPlayerVideoHandler;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by User on 14-Apr-18.
@@ -26,12 +32,24 @@ public class StepVideoFragment extends Fragment {
 
     private static final String ARG_STEP = "step_selected";
     private static final String ARG_STEP_LIST = "step_list";
+    private static final String PLAYER_POSITION = "player_position";
+
     View displayView;
-    String videoUrl;
+    @BindView(R.id.playerView)
+    SimpleExoPlayerView mPlayerView;
+    @Nullable
+    @BindView(R.id.step_instruction)
+    TextView mTextViewDescription;
+    @BindView(R.id.imageViewNoVideo)
+    ImageView mImageViewNoVideo;
     private boolean destroyVideo = true;
-    private ArrayList<Steps> displayStep;
+    private ArrayList<Steps> displayStepList;
     private int position;
-    private SimpleExoPlayerView mPlayerView;
+    private Steps displayStep;
+    private String mStepInstruction;
+    private String mVideoUrl;
+    private String mImageUrl;
+    private Unbinder unbinder;
 
     public static StepVideoFragment newInstance(int position, ArrayList<Steps> stepList) {
         Bundle args = new Bundle();
@@ -45,8 +63,15 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        displayStep = getArguments().getParcelableArrayList(ARG_STEP_LIST);
+        displayStepList = getArguments().getParcelableArrayList(ARG_STEP_LIST);
         position = getArguments().getInt(ARG_STEP);
+        getStepDetails();
+
+        if (savedInstanceState != null) {
+            ExoPlayerVideoHandler.getInstance().receivePlayerPosition(
+                    savedInstanceState.getLong(PLAYER_POSITION)
+            );
+        }
     }
 
     @Nullable
@@ -55,34 +80,60 @@ public class StepVideoFragment extends Fragment {
 
         displayView = inflater.inflate(R.layout.fragment_steps_video, container, false);
 
-        mPlayerView = displayView.findViewById(R.id.playerView);
-        TextView mTextViewDescription = displayView.findViewById(R.id.step_instruction);
+        unbinder = ButterKnife.bind(this, displayView);
 
-        Steps stepDisplay = displayStep.get(position);
-
-        if (stepDisplay.getDescription().length() != 0) {
-            mTextViewDescription.setText(stepDisplay.getDescription());
-        } else {
-            mTextViewDescription.setText(R.string.no_instructions);
+        if (savedInstanceState == null) {
+            createMediaPlayer();
         }
 
-        videoUrl = stepDisplay.getVideoUrl();
-        if (TextUtils.isEmpty(videoUrl)) {
-            videoUrl = stepDisplay.getThumbnailUrl();
-        }
-        // Initialize the player.
-        initializePlayer(Uri.parse(videoUrl));
-
+        displaySteps();
         return displayView;
+    }
+
+    private void displaySteps() {
+
+        if (mTextViewDescription != null) {
+            if (Character.isDigit(mStepInstruction.charAt(0))) {
+                mTextViewDescription.setText(mStepInstruction.substring(2));
+            }
+            mTextViewDescription.setText(mStepInstruction);
+        }
+    }
+
+
+    private void createMediaPlayer() {
+
+        if (!TextUtils.isEmpty(mVideoUrl)) {
+
+            //hide the overlay imageView
+            mImageViewNoVideo.setVisibility(View.GONE);
+            // Initialize the player.
+            initializePlayer(Uri.parse(mVideoUrl));
+        } else {
+            mPlayerView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(mImageUrl)) {
+                Picasso.with(displayView.getContext())
+                        .load(mImageUrl)
+                        .placeholder(R.drawable.cake)
+                        .error(R.drawable.cake)
+                        .into(mImageViewNoVideo);
+            } else {
+                mImageViewNoVideo.setImageResource(R.drawable.cake);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(PLAYER_POSITION, ExoPlayerVideoHandler.getInstance().savePlayerPosition());
     }
 
     private void initializePlayer(Uri videoUri) {
 
-        if (videoUri == null)
-            mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(displayView.getContext().getResources(),
-                    R.drawable.cake));
-        if (videoUri != null && mPlayerView != null) {
-            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), videoUri, mPlayerView);
+        if (videoUri != null) {
+            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(),
+                    videoUri, mPlayerView);
             destroyVideo = false;
         }
     }
@@ -90,23 +141,41 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        ExoPlayerVideoHandler.getInstance().goToBackground();
+        if (Util.SDK_INT <= 23) {
+            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (videoUrl != null && mPlayerView != null) {
-            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), Uri.parse(videoUrl), mPlayerView);
+        if (mVideoUrl != null) {
+            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), Uri.parse(mVideoUrl), mPlayerView);
         }
         ExoPlayerVideoHandler.getInstance().goToForeground();
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        unbinder.unbind();
         if (destroyVideo) {
             ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
         }
+    }
+
+    public void getStepDetails() {
+        displayStep = displayStepList.get(position);
+        mStepInstruction = displayStep.getDescription();
+        mVideoUrl = displayStep.getVideoUrl();
+        mImageUrl = displayStep.getThumbnailUrl();
     }
 }

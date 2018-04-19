@@ -26,8 +26,9 @@ import com.google.android.exoplayer2.util.Util;
 public class ExoPlayerVideoHandler {
 
     private static final String TAG = ExoPlayerVideoHandler.class.getSimpleName();
-    private static ExoPlayerVideoHandler instance;
 
+    private static ExoPlayerVideoHandler instance;
+    private static long playerPosition;
     private SimpleExoPlayer player;
     private Uri playerUri;
     private boolean isPlayerPlaying;
@@ -67,7 +68,7 @@ public class ExoPlayerVideoHandler {
             }
             player.clearVideoSurface();
             player.setVideoSurfaceView((SurfaceView) exoPlayerView.getVideoSurfaceView());
-            player.seekTo(player.getCurrentPosition() + 1);
+            player.seekTo(playerPosition);
             exoPlayerView.setPlayer(player);
         }
     }
@@ -82,6 +83,7 @@ public class ExoPlayerVideoHandler {
     public void goToBackground() {
         if (player != null) {
             isPlayerPlaying = player.getPlayWhenReady();
+            playerPosition = player.getCurrentPosition();
             player.setPlayWhenReady(false);
         }
     }
@@ -89,6 +91,19 @@ public class ExoPlayerVideoHandler {
     public void goToForeground() {
         if (player != null) {
             player.setPlayWhenReady(isPlayerPlaying);
+            player.seekTo(playerPosition);
         }
+    }
+
+    public long savePlayerPosition() {
+        if (player != null) {
+            playerPosition = player.getCurrentPosition();
+            return playerPosition;
+        }
+        return 0;
+    }
+
+    public void receivePlayerPosition(Long position) {
+        playerPosition = position;
     }
 }
