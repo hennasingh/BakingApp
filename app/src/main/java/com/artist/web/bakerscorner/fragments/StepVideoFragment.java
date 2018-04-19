@@ -95,8 +95,9 @@ public class StepVideoFragment extends Fragment {
         if (mTextViewDescription != null) {
             if (Character.isDigit(mStepInstruction.charAt(0))) {
                 mTextViewDescription.setText(mStepInstruction.substring(2));
+            } else {
+                mTextViewDescription.setText(mStepInstruction);
             }
-            mTextViewDescription.setText(mStepInstruction);
         }
     }
 
@@ -141,18 +142,19 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23) {
-            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
-        }
+        ExoPlayerVideoHandler.getInstance().savePlayerPosition();
+        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mVideoUrl != null) {
-            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(), Uri.parse(mVideoUrl), mPlayerView);
+
+        if (Util.SDK_INT <= 23 && mVideoUrl != null) {
+            createMediaPlayer();
         }
-        ExoPlayerVideoHandler.getInstance().goToForeground();
+
     }
 
     @Override
@@ -167,9 +169,7 @@ public class StepVideoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        if (destroyVideo) {
-            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
-        }
+
     }
 
     public void getStepDetails() {

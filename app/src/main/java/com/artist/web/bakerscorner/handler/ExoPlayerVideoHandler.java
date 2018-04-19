@@ -29,6 +29,7 @@ public class ExoPlayerVideoHandler {
 
     private static ExoPlayerVideoHandler instance;
     private static long playerPosition;
+    TrackSelector trackSelector;
     private SimpleExoPlayer player;
     private Uri playerUri;
     private boolean isPlayerPlaying;
@@ -50,7 +51,8 @@ public class ExoPlayerVideoHandler {
                 // Measures bandwidth during playback. Can be null if not required.
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
                 TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-                TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+                trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
                 //2. Create the Player
                 player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
@@ -75,9 +77,15 @@ public class ExoPlayerVideoHandler {
 
     public void releaseVideoPlayer() {
         if (player != null) {
+            playerPosition = player.getCurrentPosition();
+            player.stop();
             player.release();
+            player = null;
         }
-        player = null;
+        if (trackSelector != null) {
+            trackSelector = null;
+        }
+
     }
 
     public void goToBackground() {
