@@ -29,7 +29,7 @@ public class ExoPlayerVideoHandler {
 
     private static ExoPlayerVideoHandler instance;
     private static long playerPosition;
-    TrackSelector trackSelector;
+    private TrackSelector trackSelector;
     private SimpleExoPlayer player;
     private Uri playerUri;
     private boolean isPlayerPlaying;
@@ -92,8 +92,19 @@ public class ExoPlayerVideoHandler {
         if (player != null) {
             isPlayerPlaying = player.getPlayWhenReady();
             playerPosition = player.getCurrentPosition();
-            player.setPlayWhenReady(false);
         }
+    }
+
+    public boolean savePlaybackState() {
+        if (player != null) {
+            isPlayerPlaying = player.getPlayWhenReady();
+            return isPlayerPlaying;
+        }
+        return false;
+    }
+
+    public void receivePlaybackState(boolean isPlayerPlaying) {
+        this.isPlayerPlaying = isPlayerPlaying;
     }
 
     public void goToForeground() {

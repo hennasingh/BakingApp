@@ -32,6 +32,7 @@ public class StepVideoFragment extends Fragment {
 
     private static final String ARG_STEP = "step_selected";
     private static final String ARG_STEP_LIST = "step_list";
+    private static final String PLAYER_STATE = "player_state";
     private static final String PLAYER_POSITION = "player_position";
 
     View displayView;
@@ -68,6 +69,9 @@ public class StepVideoFragment extends Fragment {
         getStepDetails();
 
         if (savedInstanceState != null) {
+            ExoPlayerVideoHandler.getInstance().receivePlaybackState(
+                    savedInstanceState.getBoolean(PLAYER_STATE)
+            );
             ExoPlayerVideoHandler.getInstance().receivePlayerPosition(
                     savedInstanceState.getLong(PLAYER_POSITION)
             );
@@ -127,6 +131,7 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(PLAYER_STATE, ExoPlayerVideoHandler.getInstance().savePlaybackState());
         outState.putLong(PLAYER_POSITION, ExoPlayerVideoHandler.getInstance().savePlayerPosition());
     }
 
@@ -142,18 +147,16 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        ExoPlayerVideoHandler.getInstance().savePlayerPosition();
-        ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        ExoPlayerVideoHandler.getInstance().goToBackground();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (Util.SDK_INT <= 23 && mVideoUrl != null) {
-            createMediaPlayer();
-        }
-
+        ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(),
+                Uri.parse(mVideoUrl), mPlayerView);
+        ExoPlayerVideoHandler.getInstance().goToForeground();
     }
 
     @Override
@@ -168,6 +171,9 @@ public class StepVideoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        if (destroyVideo) {
+            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+        }
 
     }
 
