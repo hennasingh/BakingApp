@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll_landscape"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/layout_tablet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -17,12 +17,12 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@+id/recipe_ingredients"
+                android:id="@+id/container_ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <FrameLayout
-                android:id="@+id/recipe_steps"
+                android:id="@+id/container_steps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -40,7 +40,7 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@+id/steps_video"
+                android:id="@+id/container_video"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

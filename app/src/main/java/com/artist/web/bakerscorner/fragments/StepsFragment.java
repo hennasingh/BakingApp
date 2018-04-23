@@ -1,6 +1,6 @@
 package com.artist.web.bakerscorner.fragments;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.activities.StepPagerActivity;
 import com.artist.web.bakerscorner.adapters.StepsAdapter;
 import com.artist.web.bakerscorner.data.Recipes;
 import com.artist.web.bakerscorner.data.Steps;
@@ -26,7 +25,7 @@ import butterknife.Unbinder;
  * Created by User on 13-Apr-18.
  */
 
-public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClickListener {
+public class StepsFragment extends Fragment {
 
     private static final String ARG_RECIPE = "recipe_selected";
     Recipes mdisplayedRecipe;
@@ -36,12 +35,33 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     ArrayList<Steps> stepList;
     private Unbinder unbinder;
 
+    private OnStepClickListener mCallbacks;
+
     public static StepsFragment newInstance(Recipes recipe) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_RECIPE, recipe);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallbacks = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnStepClickListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -68,18 +88,13 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
         stepList = mdisplayedRecipe.getStepsList();
 
         if (mStepsAdapter == null) {
-            mStepsAdapter = new StepsAdapter(stepList, this);
+            mStepsAdapter = new StepsAdapter(stepList, mCallbacks);
             mStepsRecyclerView.setAdapter(mStepsAdapter);
             mStepsRecyclerView.setHasFixedSize(true);
+
         } else {
             mStepsAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onItemClick(Steps step) {
-        Intent intent = StepPagerActivity.newIntent(getActivity(), stepList, step);
-        startActivity(intent);
     }
 
     // When binding a fragment in onCreateView, set the views to null in onDestroyView.
@@ -88,5 +103,12 @@ public class StepsFragment extends Fragment implements StepsAdapter.StepsOnClick
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    /**
+     * Required interface for hosting activities
+     */
+    public interface OnStepClickListener {
+        void OnStepSelected(Steps step, ArrayList<Steps> stepList);
     }
 }

@@ -5,4 +5,7 @@
     <string name="servings_label">Servings:</string>
     <string name="mIngredientsDescription">%1$s\u0020\u0020\u0028%2$s\u0020%3$s\u0029\n</string>
     <string name="placeholder_no_video">No Videp for this step</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>

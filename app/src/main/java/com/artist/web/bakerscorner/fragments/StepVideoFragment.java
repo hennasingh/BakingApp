@@ -141,6 +141,7 @@ public class StepVideoFragment extends Fragment {
             ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(),
                     videoUri, mPlayerView);
             destroyVideo = false;
+            ExoPlayerVideoHandler.getInstance().goToForeground();
         }
     }
 
@@ -154,9 +155,7 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(),
-                Uri.parse(mVideoUrl), mPlayerView);
-        ExoPlayerVideoHandler.getInstance().goToForeground();
+        createMediaPlayer();
     }
 
     @Override

@@ -8,8 +8,9 @@ import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.fragments.StepsFragment;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by User on 13-Apr-18.
@@ -17,10 +18,10 @@ import java.util.List;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder> {
 
-    private List<Steps> mStepsList;
-    private StepsOnClickListener mStepsOnClickListener;
+    private ArrayList<Steps> mStepsList;
+    private StepsFragment.OnStepClickListener mStepsOnClickListener;
 
-    public StepsAdapter(List<Steps> stepsList, StepsOnClickListener mOnClickListener) {
+    public StepsAdapter(ArrayList<Steps> stepsList, StepsFragment.OnStepClickListener mOnClickListener) {
         mStepsList = stepsList;
         mStepsOnClickListener = mOnClickListener;
     }
@@ -49,18 +50,15 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
         return mStepsList.size();
     }
 
-    public interface StepsOnClickListener {
-        void onItemClick(Steps step);
-    }
 
     class StepsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView mStepNumber;
         TextView mStepDescription;
         View mVerticalSeparator;
-        StepsOnClickListener mClickListener;
+        StepsFragment.OnStepClickListener mClickListener;
 
-        StepsHolder(View itemView, StepsOnClickListener listener) {
+        StepsHolder(View itemView, StepsFragment.OnStepClickListener listener) {
             super(itemView);
             mStepNumber = itemView.findViewById(R.id.textViewStepNum);
             mStepDescription = itemView.findViewById(R.id.step_description);
@@ -74,7 +72,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
             Steps step = mStepsList.get(clickedPosition);
-            mClickListener.onItemClick(step);
+            mClickListener.OnStepSelected(step, mStepsList);
 
         }
     }
