@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.artist.web.bakerscorner.data.Recipes;
+import com.artist.web.bakerscorner.models.Recipes;
 import com.artist.web.bakerscorner.fragments.IngredientsFragment;
 import com.artist.web.bakerscorner.fragments.StepsFragment;
 

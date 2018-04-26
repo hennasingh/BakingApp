@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.models.Steps;
 import com.artist.web.bakerscorner.fragments.StepsFragment;
 
 import java.util.ArrayList;

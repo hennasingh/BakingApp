@@ -16,7 +16,7 @@ import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.activities.RecipePagerActivity;
 import com.artist.web.bakerscorner.adapters.RecipeAdapter;
-import com.artist.web.bakerscorner.data.Recipes;
+import com.artist.web.bakerscorner.models.Recipes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.adapters.StepVideoPagerAdapter;
-import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.models.Steps;
 import com.layer_net.stepindicator.StepIndicator;
 
 import java.util.ArrayList;

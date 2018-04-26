@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.data.Recipes;
+import com.artist.web.bakerscorner.models.Recipes;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.data.Ingredients;
-import com.artist.web.bakerscorner.data.Recipes;
+import com.artist.web.bakerscorner.models.Ingredients;
+import com.artist.web.bakerscorner.models.Recipes;
 import com.artist.web.bakerscorner.network.Utils;
 
 import java.util.List;

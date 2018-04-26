@@ -11,8 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.adapters.RecipePagerAdapter;
-import com.artist.web.bakerscorner.data.Recipes;
-import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.models.Recipes;
+import com.artist.web.bakerscorner.models.Steps;
 import com.artist.web.bakerscorner.fragments.IngredientsFragment;
 import com.artist.web.bakerscorner.fragments.StepVideoFragment;
 import com.artist.web.bakerscorner.fragments.StepsFragment;

@@ -1,4 +1,4 @@
-package com.artist.web.bakerscorner.data;
+package com.artist.web.bakerscorner.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

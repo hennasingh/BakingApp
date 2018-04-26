@@ -1,11 +1,15 @@
 package com.artist.web.bakerscorner.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.artist.web.bakerscorner.R;
+import com.artist.web.bakerscorner.activities.RecipePagerActivity;
+import com.artist.web.bakerscorner.models.Recipes;
 
 /**
  * Implementation of App Widget functionality.
@@ -13,13 +17,29 @@ import com.artist.web.bakerscorner.R;
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
+    public static final String RECIPE_NAME = "recipeName";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                int appWidgetId, String recipeName, Recipes recipe) {
 
         CharSequence widgetText = RecipeWidgetProviderConfigureActivity.loadTitlePref(context, appWidgetId);
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+
+        //set the ListWidgetService intent to act as the adapter for ListView
+        Intent listIntent = new Intent(context, ListWidgetService.class);
+        listIntent.putExtra(RECIPE_NAME, recipeName);
+        views.setRemoteAdapter(R.id.ingredients_listview, listIntent);
+
+        //create an Intent to launch RecipePagerActivity when clicked
+        Intent intent = RecipePagerActivity.newIntent(context, recipe);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        //Handle empty widget
+        views.setEmptyView(R.id.ingredients_listview, R.id.emptyTextView);
+
+        //Widgets allow click handlers to only launch pending intents
+        views.setOnClickPendingIntent(R.id.ingredients_listview, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -29,7 +49,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager, appWidgetId, null, null);
         }
     }
 
@@ -49,6 +69,11 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
     }
 }
 

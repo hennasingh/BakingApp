@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.adapters.StepsAdapter;
-import com.artist.web.bakerscorner.data.Recipes;
-import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.models.Recipes;
+import com.artist.web.bakerscorner.models.Steps;
 
 import java.util.ArrayList;
 

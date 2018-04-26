@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.data.Steps;
+import com.artist.web.bakerscorner.models.Steps;
 import com.artist.web.bakerscorner.handler.ExoPlayerVideoHandler;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.util.Util;
