@@ -16,7 +16,9 @@ import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.activities.RecipePagerActivity;
 import com.artist.web.bakerscorner.adapters.RecipeAdapter;
+import com.artist.web.bakerscorner.models.Ingredients;
 import com.artist.web.bakerscorner.models.Recipes;
+import com.artist.web.bakerscorner.network.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -63,6 +65,12 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //getActivity().getSupportLoaderManager().initLoader(RECIPE_LOADER,null,this);
+    }
+
     private int gridColumns() {
         int size = 0;
         switch (getActivity().getResources().getConfiguration().orientation) {
@@ -91,7 +99,6 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
                     String recipeResponse = response.body().string();
                     Gson gson = new GsonBuilder().create();
-                    Log.e(TAG, "data received: " + recipeResponse);
 
                     /**
                      * TypeToken - Gson uses Java reflection API to get the type of the object to which a Json text is to be mapped. But with generics,
@@ -101,7 +108,17 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                     mRecipeList = gson.fromJson(recipeResponse, new TypeToken<List<Recipes>>() {
                     }.getType());
 
-                    Log.e(TAG, "No of recipes " + mRecipeList.size());
+                    ArrayList<Ingredients> ingredientsList = new ArrayList<>();
+                    String recipeName;
+
+                    for (Recipes recipe : mRecipeList) {
+                        recipeName = recipe.getRecipeName();
+                        ingredientsList.addAll(recipe.getIngredientsList());
+                        Utils.writeIngredientsToDb(ingredientsList, recipeName, getActivity());
+
+                        //clear the list for next set
+                        ingredientsList.clear();
+                    }
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -142,4 +159,5 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }

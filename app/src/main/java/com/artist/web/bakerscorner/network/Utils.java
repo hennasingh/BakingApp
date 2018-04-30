@@ -1,5 +1,13 @@
 package com.artist.web.bakerscorner.network;
 
+import android.content.ContentValues;
+import android.content.Context;
+
+import com.artist.web.bakerscorner.database.RecipeContract;
+import com.artist.web.bakerscorner.models.Ingredients;
+
+import java.util.ArrayList;
+
 /**
  * Created by User on 05-Apr-18.
  */
@@ -17,4 +25,20 @@ public class Utils {
     public static String convertStringToFirstCapital(String word) {
         return word.toUpperCase().charAt(0) + word.substring(1).toLowerCase();
     }
+
+    public static void writeIngredientsToDb(ArrayList<Ingredients> ingredientsList, String recipeName,
+                                            Context context) {
+
+        ContentValues ingredientsValues = new ContentValues();
+
+        for (Ingredients ingredient : ingredientsList) {
+            ingredientsValues.put(RecipeContract.IngredientEntry.COLUMN_RECIPE_NAME, recipeName);
+            ingredientsValues.put(RecipeContract.IngredientEntry.COLUMN_INGREDIENT_NAME, ingredient.getIngredient());
+            ingredientsValues.put(RecipeContract.IngredientEntry.COLUMN_INGREDIENT_MEASURE, ingredient.getMeasure());
+            ingredientsValues.put(RecipeContract.IngredientEntry.COLUMN_INGREDIENT_QUANTITY, ingredient.getQuantity());
+
+            context.getContentResolver().insert(RecipeContract.IngredientEntry.CONTENT_URI, ingredientsValues);
+        }
+    }
+
 }

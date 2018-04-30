@@ -27,7 +27,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 RecipeContract.IngredientEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL," +
                 RecipeContract.IngredientEntry.COLUMN_INGREDIENT_NAME + " TEXT NOT NULL," +
                 RecipeContract.IngredientEntry.COLUMN_INGREDIENT_QUANTITY + " REAL NOT NULL," +
-                RecipeContract.IngredientEntry.COLUMN_INGREDIENT_MEASURE + " TEXT NOT NULL," +
+                RecipeContract.IngredientEntry.COLUMN_INGREDIENT_MEASURE + " TEXT NOT NULL" +
                 ")";
         sqLiteDatabase.execSQL(CREATE_INGREDIENTS_TABLE);
 

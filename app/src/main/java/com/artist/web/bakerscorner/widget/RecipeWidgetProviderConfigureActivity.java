@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,11 +29,11 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
 
     @BindView(R.id.recipe_spinner)
     Spinner mAppWidgetSpinner;
+    Cursor returnCursor;
 
     public RecipeWidgetProviderConfigureActivity() {
         super();
     }
-
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -45,9 +44,10 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.recipe_widget_provider_configure);
+        populateSpinnerValues();
+
         mAppWidgetSpinner.setOnItemSelectedListener(this);
 
-        populateSpinnerValues();
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -67,7 +67,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
     private void populateSpinnerValues() {
         List<String> recipeNames = new ArrayList<>();
         Uri fetchUri = RecipeContract.IngredientEntry.CONTENT_URI;
-        Cursor returnCursor = getContentResolver().query(fetchUri,
+        returnCursor = getContentResolver().query(fetchUri,
                 new String[]{"DISTINCT " + RecipeContract.IngredientEntry.COLUMN_RECIPE_NAME},
                 null,
                 null,
@@ -82,7 +82,6 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
 
             } while (returnCursor.moveToNext());
         }
-        returnCursor.close();
 
         //creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
@@ -106,7 +105,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
 
         // It is the responsibility of the configuration activity to update the app widget
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        RecipeWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+        RecipeWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId, recipeName);
 
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();
