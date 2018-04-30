@@ -30,7 +30,7 @@ public class StepsFragment extends Fragment {
     private static final String ARG_RECIPE = "recipe_selected";
     Recipes mdisplayedRecipe;
     StepsAdapter mStepsAdapter;
-    @BindView(R.id.rv_recipes)
+    @BindView(R.id.rv_steps)
     RecyclerView mStepsRecyclerView;
     ArrayList<Steps> stepList;
     private Unbinder unbinder;
@@ -74,7 +74,7 @@ public class StepsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View stepsView = inflater.inflate(R.layout.fragment_recipes_list_steps, container, false);
+        View stepsView = inflater.inflate(R.layout.fragment_steps, container, false);
 
         unbinder = ButterKnife.bind(this, stepsView);
         mStepsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

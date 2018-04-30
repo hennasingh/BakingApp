@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
 import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
+import com.artist.web.bakerscorner.activities.RecipeListActivity;
 import com.artist.web.bakerscorner.activities.RecipePagerActivity;
 import com.artist.web.bakerscorner.adapters.RecipeAdapter;
 import com.artist.web.bakerscorner.models.Ingredients;
@@ -43,10 +45,12 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     private static final String TAG = RecipeListFragment.class.getSimpleName();
     @BindView(R.id.rv_recipes)
     RecyclerView mRecipesRecyclerView;
+    SimpleIdlingResource mSimpleIdlingResource;
+    boolean isUpdateSuccessful;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipes> mRecipeList;
     private Unbinder unbinder;
-
+    private RecipeListActivity mParentActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,11 +60,20 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipes_list_steps, container, false);
+
+        mParentActivity = (RecipeListActivity) getActivity();
+
+        View view = inflater.inflate(R.layout.fragment_recipes_list, container, false);
 
         unbinder = ButterKnife.bind(this, view);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), gridColumns());
         mRecipesRecyclerView.setLayoutManager(layoutManager);
+
+        mSimpleIdlingResource = (SimpleIdlingResource) mParentActivity.getIdlingResource();
+        if (mSimpleIdlingResource != null) {
+            mSimpleIdlingResource.setIdleState(false);
+        }
+
         updateUI();
         return view;
     }
@@ -97,6 +110,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                 int statusCode = response.code();
                 if (response.isSuccessful()) {
 
+                    loadSuccessful(true);
                     String recipeResponse = response.body().string();
                     Gson gson = new GsonBuilder().create();
 
@@ -133,18 +147,27 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                                     mRecipeAdapter.notifyDataSetChanged();
                                 }
                             } catch (Exception e) {
+                                loadSuccessful(false);
                                 Log.e(TAG, "UI Update Failed " + e.getMessage());
                             }
                         }
                     });
 
                 } else {
+                    loadSuccessful(false);
                     Log.e(TAG, "Failed to get a successful response , status code = " + statusCode);
                 }
 
             }
         });
 
+    }
+
+    private void loadSuccessful(boolean isSuccessful) {
+
+        if (mSimpleIdlingResource != null) {
+            mSimpleIdlingResource.setIdleState(isSuccessful);
+        }
     }
 
     @Override

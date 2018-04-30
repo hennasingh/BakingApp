@@ -3,6 +3,7 @@ package com.artist.web.bakerscorner.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.adapters.RecipePagerAdapter;
-import com.artist.web.bakerscorner.models.Recipes;
-import com.artist.web.bakerscorner.models.Steps;
 import com.artist.web.bakerscorner.fragments.IngredientsFragment;
 import com.artist.web.bakerscorner.fragments.StepVideoFragment;
 import com.artist.web.bakerscorner.fragments.StepsFragment;
+import com.artist.web.bakerscorner.models.Recipes;
+import com.artist.web.bakerscorner.models.Steps;
 
 import java.util.ArrayList;
 
@@ -25,12 +26,13 @@ import butterknife.ButterKnife;
 public class RecipePagerActivity extends AppCompatActivity implements StepsFragment.OnStepClickListener {
 
     private static final String PARCEL_DATA = "recipe_data";
+    @Nullable
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
+    @Nullable
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
     private boolean isTwoPane = false;
-
 
 
     public static Intent newIntent(Context packageContext, Recipes recipe) {
@@ -82,4 +84,5 @@ public class RecipePagerActivity extends AppCompatActivity implements StepsFragm
             startActivity(intent);
         }
     }
+
 }
