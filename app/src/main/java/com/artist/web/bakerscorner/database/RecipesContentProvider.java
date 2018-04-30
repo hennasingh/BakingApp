@@ -25,6 +25,8 @@ public class RecipesContentProvider extends ContentProvider {
     public static final UriMatcher sUriMatcher = buildUriMatcher();
     RecipeDbHelper mRecipeDbHelper;
 
+    SQLiteDatabase databaseReadable, databaseWritable;
+
     //static buildUriMatcher method that associates URI with their int match
 
     public static UriMatcher buildUriMatcher() {
@@ -50,6 +52,8 @@ public class RecipesContentProvider extends ContentProvider {
     public boolean onCreate() {
         Context context = getContext();
         mRecipeDbHelper = new RecipeDbHelper(context);
+        databaseReadable = mRecipeDbHelper.getReadableDatabase();
+        databaseWritable = mRecipeDbHelper.getWritableDatabase();
         return true;
     }
 
@@ -59,7 +63,6 @@ public class RecipesContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        SQLiteDatabase databaseReadable = mRecipeDbHelper.getReadableDatabase();
 
         int match = sUriMatcher.match(uri);
         Cursor returnCursor;
@@ -93,7 +96,6 @@ public class RecipesContentProvider extends ContentProvider {
         }
         returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
 
-        databaseReadable.close();
         return returnCursor;
     }
 
@@ -107,7 +109,6 @@ public class RecipesContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
 
-        SQLiteDatabase databaseWritable = mRecipeDbHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);
 

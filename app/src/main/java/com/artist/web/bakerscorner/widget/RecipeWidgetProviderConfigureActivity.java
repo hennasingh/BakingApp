@@ -18,8 +18,6 @@ import com.artist.web.bakerscorner.database.RecipeContract;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * The configuration screen for the {@link RecipeWidgetProvider RecipeWidgetProvider} AppWidget.
  */
@@ -27,7 +25,6 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-    @BindView(R.id.recipe_spinner)
     Spinner mAppWidgetSpinner;
     Cursor returnCursor;
 
@@ -44,6 +41,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.recipe_widget_provider_configure);
+        mAppWidgetSpinner = findViewById(R.id.recipe_spinner);
         populateSpinnerValues();
 
         mAppWidgetSpinner.setOnItemSelectedListener(this);
@@ -118,5 +116,6 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
 }
 

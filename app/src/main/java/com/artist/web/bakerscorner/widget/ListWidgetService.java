@@ -30,7 +30,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     Cursor mCursor;
     String mRecipeName;
 
-    public ListRemoteViewsFactory(Context applicationContext, Intent intent) {
+    ListRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
         Bundle extras = intent.getExtras();
         if (extras != null) {
