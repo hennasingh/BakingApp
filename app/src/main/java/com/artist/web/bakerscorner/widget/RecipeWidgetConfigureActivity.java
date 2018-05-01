@@ -1,15 +1,16 @@
 package com.artist.web.bakerscorner.widget;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 
 import com.artist.web.bakerscorner.R;
@@ -21,14 +22,16 @@ import java.util.List;
 /**
  * The configuration screen for the {@link RecipeWidgetProvider RecipeWidgetProvider} AppWidget.
  */
-public class RecipeWidgetProviderConfigureActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class RecipeWidgetConfigureActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-
     Spinner mAppWidgetSpinner;
     Cursor returnCursor;
+    ArrayAdapter<String> dataAdapter;
+    private RemoteViews mRemoteViews;
+    private boolean userIsInteracting;
 
-    public RecipeWidgetProviderConfigureActivity() {
+    public RecipeWidgetConfigureActivity() {
         super();
     }
 
@@ -40,7 +43,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
-        setContentView(R.layout.recipe_widget_provider_configure);
+        setContentView(R.layout.recipe_widget_configure);
         mAppWidgetSpinner = findViewById(R.id.recipe_spinner);
         populateSpinnerValues();
 
@@ -58,6 +61,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
         // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
+
         }
 
     }
@@ -82,7 +86,7 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
         }
 
         //creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+        dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, recipeNames);
 
         //Drop down layout style -list view with radio button
@@ -94,22 +98,42 @@ public class RecipeWidgetProviderConfigureActivity extends Activity implements A
     }
 
     @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        userIsInteracting = true;
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
-        final Context context = RecipeWidgetProviderConfigureActivity.this;
+        if (userIsInteracting) {
 
-        //on selecting a spinner item
-        String recipeName = parent.getItemAtPosition(pos).toString();
+            final Context context = RecipeWidgetConfigureActivity.this;
 
-        // It is the responsibility of the configuration activity to update the app widget
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        RecipeWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId, recipeName);
+            //on selecting a spinner item
+            String recipeName = parent.getItemAtPosition(pos).toString();
 
-        // Make sure we pass back the original appWidgetId
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        setResult(RESULT_OK, resultValue);
-        finish();
+            // Make sure we pass back the original appWidgetId
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            resultValue.putExtra(RecipeWidgetProvider.RECIPE_NAME, recipeName);
+            setResult(RESULT_OK, resultValue);
+
+            // Build/Update widget
+            // It is the responsibility of the configuration activity to update the app widget
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+            // This is equivalent to your ChecksWidgetProvider.updateAppWidget()
+            appWidgetManager.updateAppWidget(mAppWidgetId,
+                    RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName));
+
+            // Updates the collection view, not necessary the first time
+            appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
+
+            //Destroy the Activity
+            finish();
+        }
+
     }
 
     @Override

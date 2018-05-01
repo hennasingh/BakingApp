@@ -2,6 +2,8 @@ package com.artist.web.bakerscorner.network;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 
 import com.artist.web.bakerscorner.database.RecipeContract;
 import com.artist.web.bakerscorner.models.Ingredients;
@@ -29,6 +31,7 @@ public class Utils {
     public static void writeIngredientsToDb(ArrayList<Ingredients> ingredientsList, String recipeName,
                                             Context context) {
 
+        checkDatabaseAndDelete(recipeName, context);
         ContentValues ingredientsValues = new ContentValues();
 
         for (Ingredients ingredient : ingredientsList) {
@@ -38,6 +41,22 @@ public class Utils {
             ingredientsValues.put(RecipeContract.IngredientEntry.COLUMN_INGREDIENT_QUANTITY, ingredient.getQuantity());
 
             context.getContentResolver().insert(RecipeContract.IngredientEntry.CONTENT_URI, ingredientsValues);
+        }
+    }
+
+    private static void checkDatabaseAndDelete(String recipeName, Context context) {
+
+        Uri fetchUri = RecipeContract.IngredientEntry.CONTENT_URI;
+        fetchUri = fetchUri.buildUpon().appendPath(recipeName).build();
+
+        Cursor retCursor = context.getContentResolver().query(fetchUri,
+                null,
+                null,
+                null,
+                null);
+
+        if (retCursor.getCount() > 0) {
+            context.getContentResolver().delete(fetchUri, null, null);
         }
     }
 

@@ -12,33 +12,46 @@ import com.artist.web.bakerscorner.activities.RecipeListActivity;
 
 /**
  * Implementation of App Widget functionality.
- * App Widget Configuration implemented in {@link RecipeWidgetProviderConfigureActivity RecipeWidgetProviderConfigureActivity}
+ * App Widget Configuration implemented in {@link RecipeWidgetConfigureActivity RecipeWidgetConfigureActivity}
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
     public static final String RECIPE_NAME = "recipeName";
 
+    public static RemoteViews buildRemoteViews(Context context, String recipeName) {
+
+        //construct remote views object
+        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+
+        //Set the ListWidgetService intent to act as the adapter for the listview
+        Intent listIntent = new Intent(context, ListWidgetService.class);
+        listIntent.putExtra(RECIPE_NAME, recipeName);
+        rv.setRemoteAdapter(R.id.ingredients_listview, listIntent);
+
+        //set the RecipeListActivity intent to launch when text open app is clicked
+        Intent appIntent = new Intent(context, RecipeListActivity.class);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Widgets allow click handlers to only launch pending intents
+        rv.setOnClickPendingIntent(R.id.textOpenApp, appPendingIntent);
+
+        //set the ConfigureActivity to launch when text change recipe is clicked
+        Intent recipeIntent = new Intent(context, RecipeWidgetConfigureActivity.class);
+        PendingIntent recipePendingIntent = PendingIntent.getActivity(context, 0, recipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        rv.setOnClickPendingIntent(R.id.textNewRecipe, recipePendingIntent);
+        // The empty view is displayed when the collection has no items. It should be a sibling
+        // of the collection view.
+        rv.setEmptyView(R.id.ingredients_listview, R.id.emptyTextView);
+
+        return rv;
+    }
+
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String recipeName) {
 
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-
-        //set the ListWidgetService intent to act as the adapter for ListView
-        Intent listIntent = new Intent(context, ListWidgetService.class);
-        listIntent.putExtra(RECIPE_NAME, recipeName);
-        views.setRemoteAdapter(R.id.ingredients_listview, listIntent);
-
-        //create an Intent to launch RecipePagerActivity when clicked
-        Intent intent = new Intent(context, RecipeListActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        //Handle empty widget
-        views.setEmptyView(R.id.ingredients_listview, R.id.emptyTextView);
-
-        //Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.ingredients_listview, pendingIntent);
-
+        RemoteViews views = buildRemoteViews(context, recipeName);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

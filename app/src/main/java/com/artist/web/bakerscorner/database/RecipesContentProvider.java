@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by User on 23-Apr-18.
@@ -23,8 +24,8 @@ public class RecipesContentProvider extends ContentProvider {
 
     public static final int INGREDIENT_WITH_NAME = 101;
     public static final UriMatcher sUriMatcher = buildUriMatcher();
+    private static final String TAG = RecipesContentProvider.class.getSimpleName();
     RecipeDbHelper mRecipeDbHelper;
-
     SQLiteDatabase databaseReadable, databaseWritable;
 
     //static buildUriMatcher method that associates URI with their int match
@@ -38,7 +39,7 @@ public class RecipesContentProvider extends ContentProvider {
         uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_INGREDIENTS, INGREDIENTS);
 
         //single movie
-        uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_INGREDIENTS + "/s", INGREDIENT_WITH_NAME);
+        uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_INGREDIENTS + "/*", INGREDIENT_WITH_NAME);
 
         return uriMatcher;
     }
@@ -135,8 +136,32 @@ public class RecipesContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int match = sUriMatcher.match(uri);
+        int rowDeleted;
+
+        /*
+         * If we pass null as the selection to SQLiteDatabase#delete, our entire table will be
+         * deleted. However, if we do pass null and delete all of the rows in the table, we won't
+         * know how many rows were deleted. According to the documentation for SQLiteDatabase,
+         * passing "1" for the selection will delete all rows and return the number of rows
+         * deleted, which is what the caller of this method expects.
+         */
+        if (null == selection) selection = "1";
+        switch (match) {
+            case INGREDIENTS:
+                rowDeleted = databaseWritable.delete(RecipeContract.IngredientEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        Log.d(TAG, "No of rows deleted " + rowDeleted);
+        return rowDeleted;
     }
 
     @Override

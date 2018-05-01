@@ -41,7 +41,7 @@
             android:name=".widget.ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <activity android:name=".widget.RecipeWidgetProviderConfigureActivity">
+        <activity android:name=".widget.RecipeWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>

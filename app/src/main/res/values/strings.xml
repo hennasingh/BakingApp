@@ -11,4 +11,7 @@
     <string name="widget_recipe_label">Recipe Name</string>
     <string name="add_recipe">Add Recipe</string>
     <string name="choose_recipe">Choose Recipe</string>
+    <string name="change_recipe_button">Change Recipe</string>
+    <string name="open_app_button">Open App</string>
+    <string name="empty_view_text">No Recipe Data Added</string>
 </resources>
