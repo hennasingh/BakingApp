@@ -42,7 +42,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         rv.setOnClickPendingIntent(R.id.textNewRecipe, recipePendingIntent);
         // The empty view is displayed when the collection has no items. It should be a sibling
         // of the collection view.
-        rv.setEmptyView(R.id.ingredients_listview, R.id.emptyTextView);
+        rv.setEmptyView(R.id.ingredients_listview, R.id.emptyView);
 
         return rv;
     }

@@ -154,13 +154,22 @@ public class RecipesContentProvider extends ContentProvider {
                         selection,
                         selectionArgs);
                 break;
+            case INGREDIENT_WITH_NAME:
+                String recipe = uri.getPathSegments().get(1);
+                selection = RecipeContract.IngredientEntry.COLUMN_RECIPE_NAME + " =?";
+                selectionArgs = new String[]{recipe};
+                rowDeleted = databaseWritable.delete(RecipeContract.IngredientEntry.TABLE_NAME,
+                        selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         if (rowDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
         Log.d(TAG, "No of rows deleted " + rowDeleted);
+
         return rowDeleted;
     }
 
