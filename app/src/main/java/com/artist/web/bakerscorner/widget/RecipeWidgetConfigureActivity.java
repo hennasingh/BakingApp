@@ -3,6 +3,7 @@ package com.artist.web.bakerscorner.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,10 +25,12 @@ import java.util.List;
  */
 public class RecipeWidgetConfigureActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    public static final String prefFile = "storeRecipes";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     Spinner mAppWidgetSpinner;
     Cursor returnCursor;
     ArrayAdapter<String> dataAdapter;
+    SharedPreferences mPreferences;
     private RemoteViews mRemoteViews;
     private boolean userIsInteracting;
 
@@ -45,6 +48,8 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
 
         setContentView(R.layout.recipe_widget_configure);
         mAppWidgetSpinner = findViewById(R.id.recipe_spinner);
+
+        mPreferences = getSharedPreferences(prefFile, MODE_PRIVATE);
         populateSpinnerValues();
 
         mAppWidgetSpinner.setOnItemSelectedListener(this);
@@ -112,6 +117,11 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
 
             //on selecting a spinner item
             String recipeName = parent.getItemAtPosition(pos).toString();
+            SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+
+            preferencesEditor.putString(RecipeWidgetProvider.RECIPE_NAME, recipeName);
+            preferencesEditor.apply();
+
 
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
@@ -123,7 +133,7 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-            // This is equivalent to your ChecksWidgetProvider.updateAppWidget()
+            // This is equivalent to your WidgetProvider.updateAppWidget()
             appWidgetManager.updateAppWidget(mAppWidgetId,
                     RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName));
 

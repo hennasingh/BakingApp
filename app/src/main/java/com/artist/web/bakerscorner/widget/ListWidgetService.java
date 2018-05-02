@@ -2,9 +2,11 @@ package com.artist.web.bakerscorner.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -26,26 +28,30 @@ public class ListWidgetService extends RemoteViewsService {
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
+    private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
     Context mContext;
     Cursor mCursor;
     String mRecipeName;
+    String defaultRecipe = "Nutella Pie";
 
     ListRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            mRecipeName = extras.getString(RecipeWidgetProvider.RECIPE_NAME);
+            String recipe = extras.getString(RecipeWidgetProvider.RECIPE_NAME);
+            Log.d(TAG, "Recipe received from Intents " + recipe);
         }
     }
 
     @Override
     public void onCreate() {
-
     }
 
     @Override
     public void onDataSetChanged() {
         //get all ingredients for asked recipes
+        SharedPreferences mPreferences = mContext.getSharedPreferences(RecipeWidgetConfigureActivity.prefFile, Context.MODE_PRIVATE);
+        mRecipeName = mPreferences.getString(RecipeWidgetProvider.RECIPE_NAME, defaultRecipe);
 
         Uri INGREDIENT_URI = RecipeContract.IngredientEntry.CONTENT_URI.buildUpon().appendPath(mRecipeName).build();
 

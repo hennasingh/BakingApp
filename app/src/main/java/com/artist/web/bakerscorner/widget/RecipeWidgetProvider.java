@@ -27,6 +27,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Intent listIntent = new Intent(context, ListWidgetService.class);
         listIntent.putExtra(RECIPE_NAME, recipeName);
         rv.setRemoteAdapter(R.id.ingredients_listview, listIntent);
+        rv.setTextViewText(R.id.appwidget_text, recipeName);
 
         //set the RecipeListActivity intent to launch when text open app is clicked
         Intent appIntent = new Intent(context, RecipeListActivity.class);
