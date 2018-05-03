@@ -3,8 +3,11 @@ package com.artist.web.bakerscorner.network;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 
+import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
 
 /**
@@ -17,6 +20,13 @@ public class ConnectivityReceiver extends BroadcastReceiver {
 
     public ConnectivityReceiver() {
         super();
+    }
+
+    public static boolean isConnected() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) MainApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     @Override
