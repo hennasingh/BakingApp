@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
@@ -16,7 +15,7 @@ import com.artist.web.bakerscorner.network.ConnectivityReceiver;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class RecipeListActivity extends AppCompatActivity {
+public class RecipeListActivity extends BaseActivity {
 
     @BindString(R.string.disconnected)
     String noNetwork;
@@ -33,6 +32,7 @@ public class RecipeListActivity extends AppCompatActivity {
         showSnack(ConnectivityReceiver.isConnected());
     }
 
+    @Override
     void showSnack(boolean isConnected) {
         if (isConnected) {
             if (fragment == null) {
@@ -40,6 +40,8 @@ public class RecipeListActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.recipe_fragment_container, fragment)
                         .commit();
+            } else {
+
             }
         } else {
             setContentView(R.layout.no_connection);
