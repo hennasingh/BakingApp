@@ -14,4 +14,13 @@
     <string name="change_recipe_button">Change Recipe</string>
     <string name="open_app_button">Open App</string>
     <string name="empty_view_text">No Recipe Data Added</string>
+
+    <!-- Intent Filters -->
+    <string name="intent_filter_connectivity_change">android.net.conn.CONNECTIVITY_CHANGE</string>
+    <string name="intent_filter_wifi_state_changed">android.net.wifi.WIFI_STATE_CHANGED</string>
+    <string name="intent_filter_airplane_mode_changed">android.intent.action.AIRPLANE_MODE</string>
+    <string name="connected_ok">Good! Your Device is Connected to Internet</string>
+    <string name="disconnected">Sorry! Your Device is not connected to internet</string>
+    <string name="retry_connection">Retry</string>
+    <string name="no_internet">No Internet</string>
 </resources>

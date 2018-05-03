@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
 import com.artist.web.bakerscorner.MainApplication;
@@ -45,8 +47,12 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     private static final String TAG = RecipeListFragment.class.getSimpleName();
     @BindView(R.id.rv_recipes)
     RecyclerView mRecipesRecyclerView;
+    @BindView(R.id.show_message)
+    TextView mShowMessage;
+    @BindView(R.id.loading_bar)
+    ProgressBar loadingBar;
+
     SimpleIdlingResource mSimpleIdlingResource;
-    boolean isUpdateSuccessful;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipes> mRecipeList;
     private Unbinder unbinder;
@@ -97,10 +103,28 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         return size;
     }
 
-    private void updateUI() {
+    private void showViews() {
+        loadingBar.setVisibility(View.INVISIBLE);
+        mShowMessage.setVisibility(View.INVISIBLE);
+        mRecipesRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage(String msg) {
+        loadingBar.setVisibility(View.INVISIBLE);
+        mRecipesRecyclerView.setVisibility(View.INVISIBLE);
+        mShowMessage.setText(msg);
+        mShowMessage.setVisibility(View.VISIBLE);
+
+    }
+
+    public void updateUI() {
+        if (!Utils.checkConnectivity(getContext()))
+            showErrorMessage(getResources().getString(R.string.disconnected));
         MainApplication.sHttpClient.getRecipes(new Callback() {
+
             @Override
             public void onFailure(Call call, IOException e) {
+                showErrorMessage("HTTP Call Failed " + e.getMessage());
                 Log.e(TAG, "HTTP Call Failed " + e.getMessage());
             }
 
@@ -110,7 +134,6 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                 int statusCode = response.code();
                 if (response.isSuccessful()) {
 
-                    loadSuccessful(true);
                     String recipeResponse = response.body().string();
                     Gson gson = new GsonBuilder().create();
 
@@ -139,6 +162,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                         public void run() {
                             try {
 
+                                showViews();
                                 if (mRecipeAdapter == null) {
                                     mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this, getActivity());
                                     mRecipesRecyclerView.setAdapter(mRecipeAdapter);
@@ -147,14 +171,14 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                                     mRecipeAdapter.notifyDataSetChanged();
                                 }
                             } catch (Exception e) {
-                                loadSuccessful(false);
+                                showErrorMessage("UI Update Failed " + e.getMessage());
                                 Log.e(TAG, "UI Update Failed " + e.getMessage());
                             }
                         }
                     });
 
                 } else {
-                    loadSuccessful(false);
+                    showErrorMessage("Failed to get a successful response , status code = " + statusCode);
                     Log.e(TAG, "Failed to get a successful response , status code = " + statusCode);
                 }
 

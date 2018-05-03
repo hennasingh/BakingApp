@@ -3,6 +3,8 @@ package com.artist.web.bakerscorner.network;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.artist.web.bakerscorner.database.RecipeContract;
@@ -59,5 +61,15 @@ public class Utils {
             context.getContentResolver().delete(fetchUri, null, null);
         }
     }
+
+    public static boolean checkConnectivity(Context context) {
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();//Active network info
+        return (networkInfo != null && networkInfo.isConnected());
+
+    }
+
 
 }

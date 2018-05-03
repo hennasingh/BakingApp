@@ -138,7 +138,7 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
                     RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName));
 
             // Updates the collection view, not necessary the first time
-            appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
+            //appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
 
             //Destroy the Activity
             finish();
