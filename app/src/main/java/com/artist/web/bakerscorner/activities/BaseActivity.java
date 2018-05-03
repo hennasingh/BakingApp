@@ -7,27 +7,23 @@ import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.network.ConnectivityReceiver;
 
-public class BaseActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
+public abstract class BaseActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+
+    @BindString(R.string.disconnected)
+    String noNetwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        checkConnection();
+        ButterKnife.bind(this);
     }
 
-    private void checkConnection() {
-        boolean isConnected = ConnectivityReceiver.isConnected();
-        showSnack(isConnected);
-    }
+    abstract void showSnack(boolean isConnected);
 
-    private void showSnack(boolean isConnected) {
-        if (isConnected) {
-            setContentView(R.layout.activity_main);
-        } else {
-            setContentView(R.layout.no_connection);
-        }
-    }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {

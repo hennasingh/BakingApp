@@ -18,7 +18,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     public static final String RECIPE_NAME = "recipeName";
 
-    public static RemoteViews buildRemoteViews(Context context, String recipeName) {
+    public static RemoteViews buildRemoteViews(Context context, String recipeName, int appId) {
 
         //construct remote views object
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
@@ -38,6 +38,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         //set the ConfigureActivity to launch when text change recipe is clicked
         Intent recipeIntent = new Intent(context, RecipeWidgetConfigureActivity.class);
+        recipeIntent.putExtra(RECIPE_NAME, recipeName);
+        recipeIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appId);
         PendingIntent recipePendingIntent = PendingIntent.getActivity(context, 0, recipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         rv.setOnClickPendingIntent(R.id.textNewRecipe, recipePendingIntent);
@@ -52,7 +54,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String recipeName) {
 
-        RemoteViews views = buildRemoteViews(context, recipeName);
+        RemoteViews views = buildRemoteViews(context, recipeName, appWidgetId);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

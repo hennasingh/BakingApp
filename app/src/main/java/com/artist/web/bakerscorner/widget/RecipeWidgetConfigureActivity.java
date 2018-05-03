@@ -31,6 +31,7 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
     Cursor returnCursor;
     ArrayAdapter<String> dataAdapter;
     SharedPreferences mPreferences;
+    String recipeId;
     private RemoteViews mRemoteViews;
     private boolean userIsInteracting;
 
@@ -61,6 +62,7 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
         if (extras != null) {
             mAppWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            recipeId = extras.getString(RecipeWidgetProvider.RECIPE_NAME);
         }
 
         // If this activity was started with an intent without an app widget ID, finish with an error.
@@ -134,11 +136,11 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             // This is equivalent to your WidgetProvider.updateAppWidget()
-            appWidgetManager.updateAppWidget(mAppWidgetId,
-                    RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName));
+            //ppWidgetManager.updateAppWidget(mAppWidgetId,
+            //      RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName,mAppWidgetId));
 
             // Updates the collection view, not necessary the first time
-            //appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
+            appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
 
             //Destroy the Activity
             finish();

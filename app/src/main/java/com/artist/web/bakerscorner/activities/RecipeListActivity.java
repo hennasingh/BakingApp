@@ -3,40 +3,50 @@ package com.artist.web.bakerscorner.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.fragments.RecipeListFragment;
+import com.artist.web.bakerscorner.network.ConnectivityReceiver;
 
-import butterknife.BindView;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class RecipeListActivity extends BaseActivity {
+public class RecipeListActivity extends AppCompatActivity {
 
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout mCoordinatorLayout;
+    @BindString(R.string.disconnected)
+    String noNetwork;
+    Fragment fragment;
     private SimpleIdlingResource mIdlingResource;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.recipe_fragment_container);
+        fragment = getSupportFragmentManager().findFragmentById(R.id.recipe_fragment_container);
 
-        if (fragment == null) {
-            fragment = new RecipeListFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_fragment_container, fragment)
-                    .commit();
+        showSnack(ConnectivityReceiver.isConnected());
+    }
+
+    void showSnack(boolean isConnected) {
+        if (isConnected) {
+            if (fragment == null) {
+                fragment = new RecipeListFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.recipe_fragment_container, fragment)
+                        .commit();
+            }
+        } else {
+            setContentView(R.layout.no_connection);
+            Toast.makeText(getApplicationContext(), noNetwork, Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
      */
