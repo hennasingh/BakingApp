@@ -5,12 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.network.ConnectivityReceiver;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+public class BaseActivity extends AppCompatActivity {
 
     @BindString(R.string.disconnected)
     String noNetwork;
@@ -22,19 +21,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         ButterKnife.bind(this);
     }
 
-    abstract void showSnack(boolean isConnected);
-
-
-    @Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        showSnack(isConnected);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         MainApplication.setReceiverStatus(true);
-        MainApplication.setConnectivityListener(this);
 
     }
 

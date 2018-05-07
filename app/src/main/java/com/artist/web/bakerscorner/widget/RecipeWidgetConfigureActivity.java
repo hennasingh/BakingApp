@@ -136,11 +136,11 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             // This is equivalent to your WidgetProvider.updateAppWidget()
-            appWidgetManager.updateAppWidget(mAppWidgetId,
-                    RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName, mAppWidgetId));
+            //appWidgetManager.updateAppWidget(mAppWidgetId,
+            //      RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName, mAppWidgetId));
 
             // Updates the collection view, not necessary the first time
-            //appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
+            appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);
 
             //Destroy the Activity
             finish();

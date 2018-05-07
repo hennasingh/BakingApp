@@ -52,7 +52,6 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     @BindView(R.id.loading_bar)
     ProgressBar loadingBar;
 
-    SimpleIdlingResource mSimpleIdlingResource;
     private RecipeAdapter mRecipeAdapter;
     private ArrayList<Recipes> mRecipeList;
     private Unbinder unbinder;
@@ -67,7 +66,6 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mParentActivity = (RecipeListActivity) getActivity();
 
         View view = inflater.inflate(R.layout.fragment_recipes_list, container, false);
 
@@ -75,10 +73,9 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), gridColumns());
         mRecipesRecyclerView.setLayoutManager(layoutManager);
 
-        mSimpleIdlingResource = (SimpleIdlingResource) mParentActivity.getIdlingResource();
-        if (mSimpleIdlingResource != null) {
-            mSimpleIdlingResource.setIdleState(false);
-        }
+
+        SimpleIdlingResource.setIdleState(false);
+
 
         updateUI();
         return view;
@@ -109,22 +106,22 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         mRecipesRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorMessage(String msg) {
+    private void showLoadMessage(String msg) {
         loadingBar.setVisibility(View.INVISIBLE);
         mRecipesRecyclerView.setVisibility(View.INVISIBLE);
         mShowMessage.setText(msg);
         mShowMessage.setVisibility(View.VISIBLE);
-
     }
 
     public void updateUI() {
         if (!Utils.checkConnectivity(getContext()))
-            showErrorMessage(getResources().getString(R.string.disconnected));
+            showLoadMessage(getResources().getString(R.string.disconnected));
         MainApplication.sHttpClient.getRecipes(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                showErrorMessage("HTTP Call Failed " + e.getMessage());
+                showLoadMessage("HTTP Call Failed " + e.getMessage());
+                loadSuccessful(false);
                 Log.e(TAG, "HTTP Call Failed " + e.getMessage());
             }
 
@@ -163,6 +160,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                             try {
 
                                 showViews();
+                                loadSuccessful(true);
                                 if (mRecipeAdapter == null) {
                                     mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this, getActivity());
                                     mRecipesRecyclerView.setAdapter(mRecipeAdapter);
@@ -171,14 +169,15 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
                                     mRecipeAdapter.notifyDataSetChanged();
                                 }
                             } catch (Exception e) {
-                                showErrorMessage("UI Update Failed " + e.getMessage());
+                                showLoadMessage("UI Update Failed " + e.getMessage());
                                 Log.e(TAG, "UI Update Failed " + e.getMessage());
                             }
                         }
                     });
 
                 } else {
-                    showErrorMessage("Failed to get a successful response , status code = " + statusCode);
+                    showLoadMessage("Failed to get a successful response , status code = " + statusCode);
+                    loadSuccessful(false);
                     Log.e(TAG, "Failed to get a successful response , status code = " + statusCode);
                 }
 
@@ -189,9 +188,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
     private void loadSuccessful(boolean isSuccessful) {
 
-        if (mSimpleIdlingResource != null) {
-            mSimpleIdlingResource.setIdleState(isSuccessful);
-        }
+        SimpleIdlingResource.setIdleState(isSuccessful);
     }
 
     @Override

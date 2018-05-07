@@ -1,13 +1,11 @@
 package com.artist.web.bakerscorner.activities;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
+import com.artist.web.bakerscorner.MainApplication;
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.fragments.RecipeListFragment;
 import com.artist.web.bakerscorner.network.ConnectivityReceiver;
@@ -15,12 +13,12 @@ import com.artist.web.bakerscorner.network.ConnectivityReceiver;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class RecipeListActivity extends BaseActivity {
+public class RecipeListActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
+    private static final String TAG = RecipeListActivity.class.getSimpleName();
     @BindString(R.string.disconnected)
     String noNetwork;
     Fragment fragment;
-    private SimpleIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,33 +31,35 @@ public class RecipeListActivity extends BaseActivity {
     }
 
     @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+
     void showSnack(boolean isConnected) {
+        Log.v(TAG, "isConnected is :" + isConnected);
+        Log.v(TAG, "fragment is: " + fragment);
         if (isConnected) {
-            if (fragment == null) {
+            if (fragment != null && fragment.isAdded()) {
+                RecipeListFragment recipeList = (RecipeListFragment) fragment;
+                recipeList.updateUI();
+
+            } else {
                 fragment = new RecipeListFragment();
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.recipe_fragment_container, fragment)
                         .commit();
-            } else {
-
             }
         } else {
             setContentView(R.layout.no_connection);
+            Log.v(TAG, "no connection displayed");
             Toast.makeText(getApplicationContext(), noNetwork, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
-     */
-    @VisibleForTesting
-    @NonNull
-    public IdlingResource getIdlingResource() {
-        if (mIdlingResource == null) {
-            mIdlingResource = new SimpleIdlingResource();
-        }
-        return mIdlingResource;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.setConnectivityListener(this);
     }
-
-
 }

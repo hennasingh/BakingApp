@@ -37,6 +37,14 @@
                 android:resource="@xml/recipe_widget_provider_info"/>
         </receiver>
 
+        <receiver android:name=".network.ConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name=".database.RecipesContentProvider"
             android:authorities="com.artist.web.bakerscorner"
@@ -46,13 +54,14 @@
             android:name=".widget.ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <activity android:name=".widget.RecipeWidgetConfigureActivity">
+        <activity
+            android:name=".widget.RecipeWidgetConfigureActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.BaseActivity">
-        </activity>
+        <activity android:name=".activities.BaseActivity"/>
     </application>
 
 </manifest>
