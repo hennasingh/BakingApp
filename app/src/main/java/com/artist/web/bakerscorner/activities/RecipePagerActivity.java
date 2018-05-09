@@ -47,6 +47,7 @@ public class RecipePagerActivity extends AppCompatActivity implements StepsFragm
         setContentView(R.layout.activity_masterDetail);
         ButterKnife.bind(this);
         Recipes displayRecipe = getIntent().getParcelableExtra(PARCEL_DATA);
+        setTitle(displayRecipe.getRecipeName());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (findViewById(R.id.layout_tablet) != null) {

@@ -43,6 +43,7 @@ public class StepVideoFragment extends Fragment {
     TextView mTextViewDescription;
     @BindView(R.id.imageViewNoVideo)
     ImageView mImageViewNoVideo;
+
     private boolean destroyVideo = true;
     private ArrayList<Steps> displayStepList;
     private int position;
@@ -51,6 +52,7 @@ public class StepVideoFragment extends Fragment {
     private String mVideoUrl;
     private String mImageUrl;
     private Unbinder unbinder;
+    private ExoPlayerVideoHandler mExoPlayerVideoHandler;
 
     public static StepVideoFragment newInstance(int position, ArrayList<Steps> stepList) {
         Bundle args = new Bundle();
@@ -66,13 +68,14 @@ public class StepVideoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         displayStepList = getArguments().getParcelableArrayList(ARG_STEP_LIST);
         position = getArguments().getInt(ARG_STEP);
+        mExoPlayerVideoHandler = new ExoPlayerVideoHandler();
         getStepDetails();
 
         if (savedInstanceState != null) {
-            ExoPlayerVideoHandler.getInstance().receivePlaybackState(
+            mExoPlayerVideoHandler.receivePlaybackState(
                     savedInstanceState.getBoolean(PLAYER_STATE)
             );
-            ExoPlayerVideoHandler.getInstance().receivePlayerPosition(
+            mExoPlayerVideoHandler.receivePlayerPosition(
                     savedInstanceState.getLong(PLAYER_POSITION)
             );
         }
@@ -131,24 +134,24 @@ public class StepVideoFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(PLAYER_STATE, ExoPlayerVideoHandler.getInstance().savePlaybackState());
-        outState.putLong(PLAYER_POSITION, ExoPlayerVideoHandler.getInstance().savePlayerPosition());
+        outState.putBoolean(PLAYER_STATE, mExoPlayerVideoHandler.savePlaybackState());
+        outState.putLong(PLAYER_POSITION, mExoPlayerVideoHandler.savePlayerPosition());
     }
 
     private void initializePlayer(Uri videoUri) {
 
         if (videoUri != null) {
-            ExoPlayerVideoHandler.getInstance().prepareExoPlayerForUri(displayView.getContext(),
+            mExoPlayerVideoHandler.prepareExoPlayerForUri(displayView.getContext(),
                     videoUri, mPlayerView);
             destroyVideo = false;
-            ExoPlayerVideoHandler.getInstance().goToForeground();
+            mExoPlayerVideoHandler.goToForeground();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ExoPlayerVideoHandler.getInstance().goToBackground();
+        mExoPlayerVideoHandler.goToBackground();
 
     }
 
@@ -162,7 +165,7 @@ public class StepVideoFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23) {
-            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+            mExoPlayerVideoHandler.releaseVideoPlayer();
         }
     }
 
@@ -171,7 +174,7 @@ public class StepVideoFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
         if (destroyVideo) {
-            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+            mExoPlayerVideoHandler.releaseVideoPlayer();
         }
 
     }

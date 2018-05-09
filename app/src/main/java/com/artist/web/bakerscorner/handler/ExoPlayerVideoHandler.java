@@ -34,15 +34,9 @@ public class ExoPlayerVideoHandler {
     private Uri playerUri;
     private boolean isPlayerPlaying;
 
-    private ExoPlayerVideoHandler() {
+    public ExoPlayerVideoHandler() {
     }
 
-    public static ExoPlayerVideoHandler getInstance() {
-        if (instance == null) {
-            instance = new ExoPlayerVideoHandler();
-        }
-        return instance;
-    }
 
     public void prepareExoPlayerForUri(Context context, Uri uri, SimpleExoPlayerView exoPlayerView) {
         if (context != null && uri != null && exoPlayerView != null) {
@@ -81,6 +75,7 @@ public class ExoPlayerVideoHandler {
             player.stop();
             player.release();
             player = null;
+
         }
         if (trackSelector != null) {
             trackSelector = null;

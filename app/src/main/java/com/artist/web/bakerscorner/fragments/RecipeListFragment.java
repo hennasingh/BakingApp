@@ -78,6 +78,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
 
         updateUI();
+
         return view;
     }
 

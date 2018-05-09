@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_recipe_list"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -21,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimaryDark"
             android:contentDescription="@string/placeholder_no_video"
             android:padding="@dimen/margin_4dp"
             android:scaleType="centerCrop"/>
@@ -35,6 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_12dp"
         android:fontFamily="casual"
+        android:padding="@dimen/margin_4dp"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_16sp"
         tools:text="Recipe Introduction"/>
 

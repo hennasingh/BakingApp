@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
-import com.artist.web.bakerscorner.models.Steps;
 import com.artist.web.bakerscorner.fragments.StepsFragment;
+import com.artist.web.bakerscorner.models.Steps;
 
 import java.util.ArrayList;
+
+import butterknife.BindColor;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by User on 13-Apr-18.
@@ -38,7 +42,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
 
         Steps mDisplayStep = mStepsList.get(position);
         if (position == mStepsList.size() - 1) {
-            holder.mVerticalSeparator.setVisibility(View.GONE);
+            holder.mVerticalSeparator.setBackgroundColor(holder.viewBackground);
+
         }
         holder.mStepNumber.setText(String.valueOf(mDisplayStep.getStepId()));
         holder.mStepDescription.setText(mDisplayStep.getShortDescription());
@@ -53,16 +58,19 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsHolder>
 
     class StepsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        @BindView(R.id.textViewStepNum)
         TextView mStepNumber;
+        @BindView(R.id.step_description)
         TextView mStepDescription;
+        @BindView(R.id.vertical_connector)
         View mVerticalSeparator;
+        @BindColor(R.color.color_recipe_list)
+        int viewBackground;
         StepsFragment.OnStepClickListener mClickListener;
 
         StepsHolder(View itemView, StepsFragment.OnStepClickListener listener) {
             super(itemView);
-            mStepNumber = itemView.findViewById(R.id.textViewStepNum);
-            mStepDescription = itemView.findViewById(R.id.step_description);
-            mVerticalSeparator = itemView.findViewById(R.id.vertical_connector);
+            ButterKnife.bind(this, itemView);
             mClickListener = listener;
             itemView.setOnClickListener(this);
 

@@ -7,11 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_3dp"
-    android:padding="@dimen/margin_3dp">
+    android:padding="@dimen/margin_3dp"
+    app:cardCornerRadius="@dimen/margin_3dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/color_recipe_list">
 
     <ImageView
         android:id="@+id/imageViewRecipe"
@@ -32,7 +34,8 @@
         android:layout_marginTop="@dimen/margin_16dp"
         android:fontFamily="casual"
         android:text="@string/recipe_label"
-        android:textSize="@dimen/text_18sp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_16sp"
         app:layout_constraintLeft_toRightOf="@id/imageViewRecipe"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -42,22 +45,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_12dp"
         android:fontFamily="casual"
-        android:textSize="@dimen/text_16sp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_18sp"
+        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textViewRecipeNameLabel"
         app:layout_constraintStart_toEndOf="@+id/textViewRecipeNameLabel"
         tools:text="Nutella Pie"/>
 
-    <TextView
-        android:id="@+id/textViewServingLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_12dp"
-        android:layout_marginTop="@dimen/margin_4dp"
-        android:fontFamily="casual"
-        android:text="@string/servings_label"
-        android:textSize="@dimen/text_16sp"
-        app:layout_constraintLeft_toRightOf="@id/imageViewRecipe"
-        app:layout_constraintTop_toBottomOf="@id/textViewRecipeName"/>
 
     <TextView
         android:id="@+id/textViewServing"
@@ -65,9 +59,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_6dp"
         android:layout_marginTop="@dimen/margin_6dp"
+        android:drawablePadding="@dimen/padding_8dp"
+        android:drawableStart="@drawable/ic_room_service"
         android:fontFamily="casual"
+        android:textColor="@android:color/holo_red_dark"
         android:textSize="@dimen/text_16sp"
-        app:layout_constraintLeft_toLeftOf="@id/textViewRecipeName"
+        app:layout_constraintLeft_toLeftOf="@id/textViewRecipeNameLabel"
         app:layout_constraintTop_toBottomOf="@id/textViewRecipeName"
         tools:text="8 "/>
 
