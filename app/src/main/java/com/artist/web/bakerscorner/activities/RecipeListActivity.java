@@ -1,6 +1,7 @@
 package com.artist.web.bakerscorner.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,17 +19,15 @@ public class RecipeListActivity extends BaseActivity implements ConnectivityRece
     private static final String FRAGMENT_TAG = "RecipeListFragment";
     @BindString(R.string.disconnected)
     String noNetwork;
-    RecipeListFragment recipeList;
+    Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        recipeList = (RecipeListFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_fragment_container);
 
     }
-
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
@@ -37,13 +36,20 @@ public class RecipeListActivity extends BaseActivity implements ConnectivityRece
 
     void showSnack(boolean isConnected) {
         if (isConnected) {
-
-            recipeList.updateUI();
-
+            if (mFragment == null) {
+                mFragment = new RecipeListFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.recipe_fragment_container, mFragment, FRAGMENT_TAG).commit();
+            } else {
+                RecipeListFragment recipeList = (RecipeListFragment) mFragment;
+                getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_container, recipeList, FRAGMENT_TAG).commit();
+            }
         } else {
             setContentView(R.layout.no_connection);
             Log.v(TAG, "no connection displayed");
             Toast.makeText(getApplicationContext(), noNetwork, Toast.LENGTH_SHORT).show();
+            Fragment frag = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            if (frag != null) getSupportFragmentManager().beginTransaction().remove(frag).commit();
+
         }
     }
 

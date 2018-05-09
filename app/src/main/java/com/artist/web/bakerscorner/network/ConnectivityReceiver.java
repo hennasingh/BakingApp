@@ -40,7 +40,9 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                 if (intentAction.equals(context.getString(R.string.intent_filter_connectivity_change)) ||
                         intentAction.equals(context.getString(R.string.intent_filter_wifi_state_changed)) ||
                         intentAction.equals(context.getString(R.string.intent_filter_airplane_mode_changed))) {
-                    connectivityReceiverListener.onNetworkConnectionChanged(Utils.checkConnectivity(context));
+                    if (connectivityReceiverListener != null) {
+                        connectivityReceiverListener.onNetworkConnectionChanged(Utils.checkConnectivity(context));
+                    }
                 }
 
             }
