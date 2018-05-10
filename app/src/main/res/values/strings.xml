@@ -25,4 +25,6 @@
     <string name="disconnected">Sorry! Your Device is not connected to internet</string>
     <string name="retry_connection">Retry</string>
     <string name="no_internet">No Internet</string>
+    <string name="ingredients_label">Ingredients</string>
+    <string name="steps_label">Steps</string>
 </resources>

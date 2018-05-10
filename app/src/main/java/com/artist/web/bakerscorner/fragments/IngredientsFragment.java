@@ -33,6 +33,7 @@ public class IngredientsFragment extends Fragment {
     TextView mTextViewIngredients;
     @BindString(R.string.mIngredientsDescription)
     String mTextIngredients;
+
     private Unbinder unbinder;
 
     public static IngredientsFragment newInstance(Recipes recipe) {

@@ -64,6 +64,13 @@ public class RecipePagerActivity extends AppCompatActivity implements StepsFragm
                         .replace(R.id.container_ingredients, ingredFragment)
                         .replace(R.id.container_steps, stepsFragment)
                         .commit();
+
+                Steps step = displayRecipe.getStepsList().get(0);
+                ArrayList<Steps> stepList = displayRecipe.getStepsList();
+                Fragment videoFragment = StepVideoFragment.newInstance(step.getStepId(), stepList);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container_video, videoFragment)
+                        .commit();
             }
 
         } else {

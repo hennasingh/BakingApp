@@ -4,7 +4,7 @@
     android:id="@+id/widgetLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="@color/color_recipe_list"
     android:orientation="vertical"
     android:padding="1dp">
 
@@ -20,12 +20,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:layout_weight="1"
-            android:background="#fff"
+            android:background="@color/colorAccent"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_horizontal"
-            android:padding="1dp"
+            android:padding="@dimen/padding_2dp"
             android:text="@string/change_recipe_button"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"/>
 
@@ -35,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:layout_weight="1"
-            android:background="#fff"
+            android:background="@color/colorAccent"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_horizontal"
-            android:padding="1dp"
+            android:padding="@dimen/padding_2dp"
             android:text="@string/open_app_button"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"/>
 
@@ -49,16 +51,16 @@
 
     <TextView
         android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:layout_marginStart="2dp"
-        android:background="#09C"
+        android:layout_marginStart="@dimen/margin_10dp"
+        android:layout_marginTop="@dimen/margin_3dp"
         android:contentDescription="@string/widget_recipe_label"
         android:fontFamily="casual"
-        android:textColor="#ffffff"
-        android:textSize="14sp"
-        android:textStyle="bold|italic"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:textStyle="bold"
         tools:text="Nutella Pie"/>
 
     <FrameLayout

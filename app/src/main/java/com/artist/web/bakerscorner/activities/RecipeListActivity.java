@@ -27,6 +27,10 @@ public class RecipeListActivity extends BaseActivity implements ConnectivityRece
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        if (mFragment == null) {
+            mFragment = new RecipeListFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.recipe_fragment_container, mFragment, FRAGMENT_TAG).commit();
+        }
     }
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {

@@ -26,6 +26,7 @@ import java.util.List;
 public class RecipeWidgetConfigureActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String prefFile = "storeRecipes";
+    private static final String RECIPE_AT_ZERO = "Nutella Pie";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     Spinner mAppWidgetSpinner;
     Cursor returnCursor;
@@ -119,6 +120,10 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
 
             //on selecting a spinner item
             String recipeName = parent.getItemAtPosition(pos).toString();
+            if (pos == 0) {
+                recipeName = RECIPE_AT_ZERO;
+            }
+
             SharedPreferences.Editor preferencesEditor = mPreferences.edit();
 
             preferencesEditor.putString(RecipeWidgetProvider.RECIPE_NAME, recipeName);
@@ -136,8 +141,8 @@ public class RecipeWidgetConfigureActivity extends AppCompatActivity implements 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             // This is equivalent to your WidgetProvider.updateAppWidget()
-            //appWidgetManager.updateAppWidget(mAppWidgetId,
-            //      RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName, mAppWidgetId));
+            appWidgetManager.updateAppWidget(mAppWidgetId,
+                    RecipeWidgetProvider.buildRemoteViews(getApplicationContext(), recipeName, mAppWidgetId));
 
             // Updates the collection view, not necessary the first time
             appWidgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.ingredients_listview);

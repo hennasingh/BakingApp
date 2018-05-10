@@ -34,9 +34,15 @@ public class ExoPlayerVideoHandler {
     private Uri playerUri;
     private boolean isPlayerPlaying;
 
-    public ExoPlayerVideoHandler() {
+    private ExoPlayerVideoHandler() {
     }
 
+    public static ExoPlayerVideoHandler getInstance() {
+        if (instance == null) {
+            instance = new ExoPlayerVideoHandler();
+        }
+        return instance;
+    }
 
     public void prepareExoPlayerForUri(Context context, Uri uri, SimpleExoPlayerView exoPlayerView) {
         if (context != null && uri != null && exoPlayerView != null) {

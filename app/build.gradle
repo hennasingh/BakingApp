@@ -52,6 +52,8 @@ dependencies {
     //Card View
     implementation 'com.android.support:cardview-v7:27.1.1'
 
+    //expendable text views
+    implementation  'com.ms-square:expandableTextView:0.1.4'
     //butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

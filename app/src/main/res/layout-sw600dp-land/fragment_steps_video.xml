@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llayout_step_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_300dp"
+        android:background="@color/color_recipe_list"
+        android:padding="@dimen/padding_8dp">
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/imageViewNoVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@color/colorPrimaryDark"
+            android:contentDescription="@string/placeholder_no_video"
+            android:padding="@dimen/margin_4dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/bigdonut"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/step_instruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_12dp"
+        android:fontFamily="casual"
+        android:padding="@dimen/margin_4dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_16sp"
+        tools:text="Recipe Introduction"/>
+
+</LinearLayout>

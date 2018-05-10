@@ -3,6 +3,7 @@ package com.artist.web.bakerscorner.fragments;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -45,6 +46,7 @@ import okhttp3.Response;
 public class RecipeListFragment extends Fragment implements RecipeAdapter.RecipeAdapterOnClickListener {
 
     private static final String TAG = RecipeListFragment.class.getSimpleName();
+    private static final String STATE_RECIPES = "state_recipes";
     @BindView(R.id.rv_recipes)
     RecyclerView mRecipesRecyclerView;
     @BindView(R.id.show_message)
@@ -76,8 +78,20 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
         SimpleIdlingResource.setIdleState(false);
 
+        if (savedInstanceState != null) {
+            showViews();
+            mRecipeList = savedInstanceState.getParcelableArrayList(STATE_RECIPES);
+            if (mRecipeAdapter == null) {
+                mRecipeAdapter = new RecipeAdapter(mRecipeList, RecipeListFragment.this, getActivity());
+                mRecipesRecyclerView.setAdapter(mRecipeAdapter);
+                mRecipesRecyclerView.setHasFixedSize(true);
+            } else {
+                mRecipeAdapter.notifyDataSetChanged();
+            }
+        } else {
 
-        updateUI();
+            updateUI();
+        }
 
         return view;
     }
@@ -205,4 +219,9 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
         unbinder.unbind();
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(STATE_RECIPES, mRecipeList);
+    }
 }
