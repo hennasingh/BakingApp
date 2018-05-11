@@ -13,6 +13,7 @@ import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.models.Ingredients;
 import com.artist.web.bakerscorner.models.Recipes;
 import com.artist.web.bakerscorner.network.Utils;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class IngredientsFragment extends Fragment {
     TextView mTextViewIngredients;
     @BindString(R.string.mIngredientsDescription)
     String mTextIngredients;
+    @BindView(R.id.expandableView)
+    ExpandableTextView mExpandableTextView;
 
     private Unbinder unbinder;
 
@@ -72,7 +75,15 @@ public class IngredientsFragment extends Fragment {
 
         }
 
-        mTextViewIngredients.setText(detailIngredients);
+        //throws an error, can you help figure this out
+        mExpandableTextView.setText(detailIngredients);
+        mExpandableTextView.setOnExpandStateChangeListener(new ExpandableTextView.OnExpandStateChangeListener() {
+            @Override
+            public void onExpandStateChanged(TextView textView, boolean isExpanded) {
+
+            }
+        });
+        // mTextViewIngredients.setText(detailIngredients);
 
         return ingredientView;
     }
