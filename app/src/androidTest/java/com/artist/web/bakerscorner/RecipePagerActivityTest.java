@@ -1,5 +1,7 @@
 package com.artist.web.bakerscorner;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -7,7 +9,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.artist.web.bakerscorner.IdlingResource.SimpleIdlingResource;
 import com.artist.web.bakerscorner.activities.RecipeListActivity;
-import com.artist.web.bakerscorner.fragments.RecipeListFragment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +42,6 @@ public class RecipePagerActivityTest {
     @Before
     public void registerIdlingResource() {
         IdlingRegistry.getInstance().register(SimpleIdlingResource.getIdlingResource());
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.recipe_fragment_container, new RecipeListFragment()).commit();
     }
 
 
@@ -63,7 +63,14 @@ public class RecipePagerActivityTest {
 
         onView(withId(R.id.rv_recipes)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        onView(withId(R.id.sliding_tabs)).check(matches(isDisplayed()));
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        Boolean isTwoPane = targetContext.getResources().getBoolean(R.bool.two_pane);
+
+        if (isTwoPane) {
+            onView(withId(R.id.player_layout)).check(matches(isDisplayed()));
+        } else {
+            onView(withId(R.id.sliding_tabs)).check(matches(isDisplayed()));
+        }
 
     }
 

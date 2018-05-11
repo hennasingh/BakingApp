@@ -22,10 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RecipePagerActivity">
+        <activity
+            android:name=".activities.RecipePagerActivity"
+            android:parentActivityName=".activities.RecipeListActivity">
         </activity>
-        <activity android:name=".activities.StepPagerActivity">
-        </activity>
+        <activity android:name=".activities.StepPagerActivity"/>
 
         <receiver android:name=".widget.RecipeWidgetProvider">
             <intent-filter>
