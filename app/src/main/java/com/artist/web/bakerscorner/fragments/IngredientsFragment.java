@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.artist.web.bakerscorner.R;
 import com.artist.web.bakerscorner.models.Ingredients;
@@ -30,8 +29,7 @@ public class IngredientsFragment extends Fragment {
 
     private static final String ARG_RECIPE = "recipe_selected";
     Recipes mdisplayedRecipe;
-    @BindView(R.id.textViewIngredient)
-    TextView mTextViewIngredients;
+
     @BindString(R.string.mIngredientsDescription)
     String mTextIngredients;
     @BindView(R.id.expandableView)
@@ -75,15 +73,7 @@ public class IngredientsFragment extends Fragment {
 
         }
 
-        //throws an error, can you help figure this out
         mExpandableTextView.setText(detailIngredients);
-        mExpandableTextView.setOnExpandStateChangeListener(new ExpandableTextView.OnExpandStateChangeListener() {
-            @Override
-            public void onExpandStateChanged(TextView textView, boolean isExpanded) {
-
-            }
-        });
-        // mTextViewIngredients.setText(detailIngredients);
 
         return ingredientView;
     }
