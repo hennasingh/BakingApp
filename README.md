@@ -44,6 +44,7 @@ Main Screen | Detail Screen | Widget
 ![main](/assets/tablet_mainScreen.png) | ![detail](/assets/tablet_detailScreen.png) | ![widget](/assets/tablet_widget.png)
 
 
+
 ## License
 
 This project submitted by Henna Singh is a part of the Nanodegree At Udacity.
